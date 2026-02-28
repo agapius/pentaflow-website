@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PentaFlow AI — KI-Agenten für PSI Penta ERP Automatisierung</title>
+  <meta name="description" content="PentaFlow AI entwickelt autonome KI-Agenten für PSI Penta ERP. Automatische Eingangsrechnungsverarbeitung, Bestellbestätigungen und mehr — direkt über die PSI Penta REST API.">
+  <meta name="keywords" content="psi penta ki, psi penta ai, psipenta ki, psipenta ai, psi penta agenten, penta ai, psi penta erp, psipenta eingangsrechnung, psi penta automatisierung, psi penta rest api, ki dokumentenverarbeitung, automatische rechnungsverarbeitung">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="PentaFlow AI">
+  <link rel="canonical" href="https://pentaflow.ai/">
+  <meta http-equiv="content-language" content="de">
+  <link rel="alternate" hreflang="de" href="https://pentaflow.ai/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pentaflow.ai/">
+  <meta property="og:title" content="PentaFlow AI — KI-Agenten für PSI Penta ERP">
+  <meta property="og:description" content="Autonome KI-Agenten, die Ihre PSI Penta Prozesse automatisieren. Eingangsrechnungen, Bestellbestätigungen und mehr — vollautomatisch.">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:site_name" content="PentaFlow AI">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PentaFlow AI — KI-Agenten für PSI Penta ERP">
+  <meta name="twitter:description" content="Autonome KI-Agenten, die Ihre PSI Penta Prozesse automatisieren. Eingangsrechnungen, Bestellbestätigungen und mehr — vollautomatisch.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "PentaFlow AI",
+    "url": "https://pentaflow.ai",
+    "email": "info@pentaflow.ai",
+    "description": "PentaFlow AI entwickelt autonome KI-Agenten für PSI Penta ERP Automatisierung.",
+    "address": [
+      {
+        "@type": "PostalAddress",
+        "addressLocality": "Berlin",
+        "addressCountry": "DE"
+      },
+      {
+        "@type": "PostalAddress",
+        "addressLocality": "Wien",
+        "addressCountry": "AT"
+      }
+    ],
+    "areaServed": [
+      { "@type": "Country", "name": "Germany" },
+      { "@type": "Country", "name": "Austria" }
+    ],
+    "knowsAbout": ["PSI Penta", "PSI Penta ERP", "KI-Agenten", "ERP Automatisierung", "Eingangsrechnungsverarbeitung", "REST API Integration"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "PentaFlow AI",
+    "url": "https://pentaflow.ai",
+    "email": "info@pentaflow.ai",
+    "address": [
+      {
+        "@type": "PostalAddress",
+        "addressLocality": "Berlin",
+        "addressCountry": "DE"
+      },
+      {
+        "@type": "PostalAddress",
+        "addressLocality": "Wien",
+        "addressCountry": "AT"
+      }
+    ],
+    "description": "Beratung und Entwicklung autonomer KI-Agenten für PSI Penta ERP Systeme.",
+    "priceRange": "$$$$"
+  }
+  </script>
+
+  <!-- FAQ Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Was ist PSIpenta?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "PSIpenta ist ein ERP-System der PSI Software SE, das speziell für die Fertigungsindustrie entwickelt wurde. Es deckt Prozesse wie Beschaffung, Produktion, Logistik und Finanzbuchhaltung ab und bietet eine REST API für Integrationen."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Kann man PSI Penta mit KI automatisieren?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja. Über die PSI Penta REST API können KI-Agenten direkt mit dem ERP-System kommunizieren — Daten lesen, validieren und zurückschreiben. PentaFlow AI entwickelt genau solche autonomen KI-Agenten für PSI Penta Prozesse."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie funktioniert automatische Rechnungsverarbeitung mit PSI Penta?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Unser KI-Agent überwacht Ihr E-Mail-Postfach, klassifiziert eingehende PDFs, extrahiert Rechnungsdaten per KI, gleicht diese mit Bestellungen in PSI Penta ab und erstellt automatisch Rechnungsdatensätze (PREK) im ERP-System."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef5ff',
+              100: '#d9e8ff',
+              200: '#bcd8ff',
+              300: '#8ec0ff',
+              400: '#599eff',
+              500: '#3478ff',
+              600: '#1b57f5',
+              700: '#1443e1',
+              800: '#1736b6',
+              900: '#19328f',
+              950: '#142057',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #3478ff 0%, #8ec0ff 50%, #ffffff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Subtle grid background */
+    .bg-grid {
+      background-image:
+        linear-gradient(rgba(52, 120, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(52, 120, 255, 0.03) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    /* Glow effect */
+    .glow {
+      box-shadow: 0 0 60px rgba(52, 120, 255, 0.15), 0 0 120px rgba(52, 120, 255, 0.05);
+    }
+
+    /* Card hover */
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(52, 120, 255, 0.1);
+      border-color: rgba(52, 120, 255, 0.3);
+    }
+
+    /* Step connector line */
+    .step-line::after {
+      content: '';
+      position: absolute;
+      top: 2.25rem;
+      left: calc(50% + 2rem);
+      width: calc(100% - 4rem);
+      height: 1px;
+      background: linear-gradient(90deg, rgba(52, 120, 255, 0.3), rgba(52, 120, 255, 0.05));
+    }
+
+    /* Animate on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(52, 120, 255, 0.4);
+      border-radius: 50%;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+    }
+
+    /* Pulse ring on CTA */
+    .pulse-ring {
+      animation: pulse-ring 2s ease-out infinite;
+    }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(52, 120, 255, 0.4); }
+      100% { box-shadow: 0 0 0 20px rgba(52, 120, 255, 0); }
+    }
+
+    /* Nav blur */
+    .nav-blur {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+  </style>
+</head>
+<body class="bg-[#09090b] text-gray-200 antialiased bg-grid">
+
+  <!-- Particles Container -->
+  <div id="particles" class="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-[#09090b]/80 border-b border-white/5">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="#" class="text-xl font-bold tracking-tight text-white">
+          Penta<span class="text-brand-500">Flow</span>
+        </a>
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#agenten" class="text-sm text-gray-400 hover:text-white transition-colors">Agenten</a>
+          <a href="#prozess" class="text-sm text-gray-400 hover:text-white transition-colors">Prozess</a>
+          <a href="#technologie" class="text-sm text-gray-400 hover:text-white transition-colors">Technologie</a>
+          <a href="#ueber-uns" class="text-sm text-gray-400 hover:text-white transition-colors">Über uns</a>
+          <a href="#kontakt" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 rounded-lg transition-colors">
+            Kontakt
+          </a>
+        </div>
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-400 hover:text-white" aria-label="Menü öffnen">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-white/5 bg-[#09090b]/95 nav-blur">
+      <div class="px-4 py-4 space-y-3">
+        <a href="#agenten" class="block text-sm text-gray-400 hover:text-white transition-colors">Agenten</a>
+        <a href="#prozess" class="block text-sm text-gray-400 hover:text-white transition-colors">Prozess</a>
+        <a href="#technologie" class="block text-sm text-gray-400 hover:text-white transition-colors">Technologie</a>
+        <a href="#ueber-uns" class="block text-sm text-gray-400 hover:text-white transition-colors">Über uns</a>
+        <a href="#kontakt" class="block text-sm font-medium text-brand-400 hover:text-brand-300 transition-colors">Kontakt →</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ██ HERO ██ -->
+    <section class="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
+      <!-- Hero glow -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-brand-600/10 rounded-full blur-[150px] pointer-events-none" aria-hidden="true"></div>
+
+      <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center py-24 sm:py-32">
+        <div class="reveal">
+          <div class="inline-flex items-center gap-2 px-3 py-1 mb-8 text-xs font-medium text-brand-400 bg-brand-950/50 border border-brand-800/30 rounded-full">
+            <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+            Erster Agent live — Eingangsrechnungsverarbeitung
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6">
+            <span class="text-white">KI-Agenten für</span><br>
+            <span class="gradient-text">PSI Penta ERP</span>
+          </h1>
+
+          <p class="max-w-2xl mx-auto text-lg sm:text-xl text-gray-400 leading-relaxed mb-10">
+            Wir entwickeln autonome KI-Agenten, die Ihre <strong class="text-gray-200">PSI&nbsp;Penta</strong> Prozesse automatisieren. Künstliche Intelligenz von der Bestellung bis zur Eingangsrechnung. Direkt über die <strong class="text-gray-200">PSI&nbsp;Penta API</strong>.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="#kontakt" class="pulse-ring inline-flex items-center px-8 py-3.5 text-base font-semibold text-white bg-brand-600 hover:bg-brand-500 rounded-xl transition-all">
+              Jetzt Kontakt aufnehmen
+              <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <a href="#agenten" class="inline-flex items-center px-8 py-3.5 text-base font-medium text-gray-300 hover:text-white border border-white/10 hover:border-white/20 rounded-xl transition-all">
+              Agenten entdecken
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-600 animate-bounce">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+      </div>
+    </section>
+
+    <!-- ██ PROBLEM ██ -->
+    <section class="relative py-24 sm:py-32">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal max-w-3xl">
+          <p class="text-sm font-semibold text-brand-400 uppercase tracking-wider mb-4">Das Problem</p>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+            PSI Penta ist mächtig.<br>
+            <span class="text-gray-500">Aber viel zu viel läuft noch manuell.</span>
+          </h2>
+          <p class="text-lg text-gray-400 leading-relaxed mb-12">
+            Fertigungsunternehmen, die PSI&nbsp;Penta&nbsp;ERP einsetzen, kennen das Problem: Bestellbestätigungen manuell abgeglichen, Rechnungen werden von Hand erfasst und Daten werden zwischen Systemen kopiert. Das kostet Zeit, produziert Fehler — und skaliert nicht.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 reveal">
+          <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02]">
+            <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-red-500/10 text-red-400 mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-white mb-2">Zeitverlust</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">Manuelle Datenerfassung in PSIpenta kostet Stunden pro Tag. Jede Rechnung, jede Bestellung — einzeln eingetippt.</p>
+          </div>
+          <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02]">
+            <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-orange-500/10 text-orange-400 mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-white mb-2">Fehleranfällig</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">Zahlendreher, falsche Zuordnungen, übersehene Abweichungen — manuelle Prozesse im ERP sind eine konstante Fehlerquelle.</p>
+          </div>
+          <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02]">
+            <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-yellow-500/10 text-yellow-400 mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-white mb-2">Skaliert nicht</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">Mehr Aufträge = mehr manuelle Arbeit. PSI&nbsp;Penta Automatisierung ist der einzige Weg, um mit dem Wachstum Schritt zu halten.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ██ LÖSUNG ██ -->
+    <section class="relative py-24 sm:py-32">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal max-w-3xl mx-auto text-center mb-16">
+          <p class="text-sm font-semibold text-brand-400 uppercase tracking-wider mb-4">Die Lösung</p>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+            Autonome KI-Agenten<br>
+            <span class="gradient-text">für Ihre PSI Penta Prozesse</span>
+          </h2>
+          <p class="text-lg text-gray-400 leading-relaxed">
+            Unsere KI-Agenten arbeiten rund um die Uhr. Sie lesen Emails, verstehen Dokumente, gleichen Daten mit PSI&nbsp;Penta ab und buchen automatisch - ohne manuellen Eingriff. Maßgeschneidert für Ihre Prozesse, über die <strong class="text-gray-200">PSIpenta&nbsp;API</strong> integriert.
+          </p>
+        </div>
+
+        <div class="reveal grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div class="p-8 rounded-2xl border border-brand-800/20 bg-brand-950/20 glow">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-brand-600/20 text-brand-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </div>
+              <h3 class="text-lg font-semibold text-white">KI versteht Ihre Dokumente</h3>
+            </div>
+            <p class="text-sm text-gray-400 leading-relaxed">Unsere künstliche Intelligenz analysiert Rechnungen, Bestellbestätigungen und andere Dokumente — extrahiert strukturierte Daten aus jedem Dokument, auch bei komplexen Layouts.</p>
+          </div>
+          <div class="p-8 rounded-2xl border border-brand-800/20 bg-brand-950/20 glow">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-brand-600/20 text-brand-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+              </div>
+              <h3 class="text-lg font-semibold text-white">Direkte PSI Penta Integration</h3>
+            </div>
+            <p class="text-sm text-gray-400 leading-relaxed">Kein Export/Import, keine Zwischensysteme. Unsere Agenten kommunizieren direkt mit der PSI&nbsp;Penta&nbsp;API — lesen Bestelldaten, validieren und schreiben Ergebnisse zurück ins ERP.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ██ AGENTEN-ÜBERSICHT ██ -->
+    <section id="agenten" class="relative py-24 sm:py-32">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center mb-16">
+          <p class="text-sm font-semibold text-brand-400 uppercase tracking-wider mb-4">Unsere KI-Agenten</p>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
+            PSI Penta Agenten im Überblick
+          </h2>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 reveal">
+          <!-- Agent 1: Eingangsrechnungen -->
+          <div class="card-hover relative p-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+            <div class="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-green-400 bg-green-500/10 border border-green-500/20 rounded-full">
+              <span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span> Live
+            </div>
+            <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-brand-600/10 text-brand-400 mb-6">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-3">Eingangsrechnungen</h3>
+            <p class="text-sm text-gray-400 leading-relaxed mb-6">
+              Automatische Eingangsrechnungsverarbeitung in PSIPenta. Von der E-Mail bis zum PREK-Datensatz — vollautomatisch.
+            </p>
+            <ul class="space-y-2.5 text-sm text-gray-400">
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                E-Mail-Monitoring (Microsoft 365)
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                KI-Klassifikation &amp; Datenextraktion
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Bestellabgleich (PEKK → PUID → PEKP)
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                UID- &amp; Betragsvalidierung
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Automatische PREK-Erstellung
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Vendor-spezifische Regeln
+              </li>
+            </ul>
+          </div>
+
+          <!-- Agent 2: Bestellbestätigungen -->
+          <div class="card-hover relative p-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+            <div class="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 rounded-full">
+              <span class="w-1.5 h-1.5 bg-yellow-400 rounded-full"></span> Coming Soon
+            </div>
+            <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-brand-600/10 text-brand-400 mb-6">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-3">Bestellbestätigungen</h3>
+            <p class="text-sm text-gray-400 leading-relaxed mb-6">
+              Automatische Verarbeitung von Bestellbestätigungen. KI-Extraktion, Abgleich mit PSI&nbsp;Penta Bestellungen und automatische Aktualisierung.
+            </p>
+            <ul class="space-y-2.5 text-sm text-gray-400">
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-gray-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                E-Mail-basierte Erfassung
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-gray-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                KI-Extraktion der Bestätigungsdaten
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-gray-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Preis- &amp; Terminabgleich
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-gray-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Automatische ERP-Aktualisierung
+              </li>
+            </ul>
+          </div>
+
+          <!-- Agent 3: Weitere Prozesse -->
+          <div class="card-hover relative p-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+            <div class="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-brand-400 bg-brand-500/10 border border-brand-500/20 rounded-full">
+              Auf Anfrage
+            </div>
+            <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-brand-600/10 text-brand-400 mb-6">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-3">Weitere Prozesse</h3>
+            <p class="text-sm text-gray-400 leading-relaxed mb-6">
+              Jeder PSI&nbsp;Penta Prozess, der über die PSIpenta&nbsp;Schnittstelle zugänglich ist, kann automatisiert werden. Wir bauen Ihren individuellen KI-Agenten.
+            </p>
+            <ul class="space-y-2.5 text-sm text-gray-400">
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Lieferscheine &amp; Wareneingänge
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Auftragsbestätigungen
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Stammdatenpflege
+              </li>
+              <li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Individuelle Workflows
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ██ WIE ES FUNKTIONIERT ██ -->
+    <section id="prozess" class="relative py-24 sm:py-32">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center mb-16">
+          <p class="text-sm font-semibold text-brand-400 uppercase tracking-wider mb-4">Wie es funktioniert</p>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
+            Vom Posteingang direkt<br>
+            <span class="gradient-text">ins PSI Penta ERP</span>
+          </h2>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+          <!-- Step 1 -->
+          <div class="relative text-center p-6">
+            <div class="w-12 h-12 mx-auto flex items-center justify-center rounded-full bg-brand-600/20 text-brand-400 border border-brand-600/30 mb-6 text-lg font-bold">1</div>
+            <h3 class="text-base font-semibold text-white mb-2">E-Mail-Monitoring</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">Der Agent überwacht Ihr Microsoft&nbsp;365 Postfach kontinuierlich auf eingehende Dokumente.</p>
+          </div>
+          <!-- Step 2 -->
+          <div class="relative text-center p-6">
+            <div class="w-12 h-12 mx-auto flex items-center justify-center rounded-full bg-brand-600/20 text-brand-400 border border-brand-600/30 mb-6 text-lg font-bold">2</div>
+            <h3 class="text-base font-semibold text-white mb-2">KI-Extraktion</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">Gemini AI klassifiziert das Dokument und extrahiert alle relevanten Daten — Positionen, Beträge, UID-Nummern.</p>
+          </div>
+          <!-- Step 3 -->
+          <div class="relative text-center p-6">
+            <div class="w-12 h-12 mx-auto flex items-center justify-center rounded-full bg-brand-600/20 text-brand-400 border border-brand-600/30 mb-6 text-lg font-bold">3</div>
+            <h3 class="text-base font-semibold text-white mb-2">ERP-Abgleich</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">Der Agent sucht die passende Bestellung in PSI&nbsp;Penta, validiert UID-Nummern und gleicht Beträge ab.</p>
+          </div>
+          <!-- Step 4 -->
+          <div class="relative text-center p-6">
+            <div class="w-12 h-12 mx-auto flex items-center justify-center rounded-full bg-brand-600/20 text-brand-400 border border-brand-600/30 mb-6 text-lg font-bold">4</div>
+            <h3 class="text-base font-semibold text-white mb-2">Automatische Buchung</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">Bei erfolgreicher Validierung erstellt der Agent den Datensatz in PSI&nbsp;Penta — vollautomatisch über die REST&nbsp;API.</p>
+          </div>
+        </div>
+
+        <!-- Process visual bar -->
+        <div class="reveal mt-12 max-w-3xl mx-auto">
+          <div class="flex items-center gap-2 text-xs text-gray-500 overflow-x-auto">
+            <span class="whitespace-nowrap px-3 py-1.5 bg-white/5 rounded-md border border-white/5">📧 E-Mail</span>
+            <svg class="w-4 h-4 text-brand-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <span class="whitespace-nowrap px-3 py-1.5 bg-white/5 rounded-md border border-white/5">🤖 KI-Analyse</span>
+            <svg class="w-4 h-4 text-brand-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <span class="whitespace-nowrap px-3 py-1.5 bg-white/5 rounded-md border border-white/5">🔍 Abgleich</span>
+            <svg class="w-4 h-4 text-brand-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <span class="whitespace-nowrap px-3 py-1.5 bg-white/5 rounded-md border border-white/5">✅ PSI Penta</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ██ TECHNOLOGIE ██ -->
+    <section id="technologie" class="relative py-24 sm:py-32">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center mb-16">
+          <p class="text-sm font-semibold text-brand-400 uppercase tracking-wider mb-4">Technologie</p>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+            Gebaut auf Enterprise-Technologie
+          </h2>
+          <p class="max-w-2xl mx-auto text-lg text-gray-400 leading-relaxed">
+            Unsere PSI&nbsp;Penta KI-Agenten nutzen modernste Technologien — sicher, zuverlässig und für den produktiven Einsatz optimiert.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+          <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
+            <div class="w-10 h-10 mx-auto flex items-center justify-center rounded-lg bg-brand-600/10 text-brand-400 mb-4" aria-hidden="true">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg>
+            </div>
+            <h3 class="text-sm font-semibold text-white mb-1">Modernste KI-Modelle</h3>
+            <p class="text-xs text-gray-500 leading-relaxed">Flexibel mit Google Gemini, OpenAI, Anthropic — immer das beste Modell für Ihren Anwendungsfall.</p>
+          </div>
+          <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
+            <div class="w-10 h-10 mx-auto flex items-center justify-center rounded-lg bg-brand-600/10 text-brand-400 mb-4" aria-hidden="true">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+            </div>
+            <h3 class="text-sm font-semibold text-white mb-1">100% Datenschutz</h3>
+            <p class="text-xs text-gray-500 leading-relaxed">Hosting in Deutschland. Ihre Daten bleiben in ihrer Hand. Keine Daten­nutzung zu Trainings­zwecken. Volle DSGVO-Konformität.</p>
+          </div>
+          <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
+            <div class="w-10 h-10 mx-auto flex items-center justify-center rounded-lg bg-brand-600/10 text-brand-400 mb-4" aria-hidden="true">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+            </div>
+            <h3 class="text-sm font-semibold text-white mb-1">Email Integration</h3>
+            <p class="text-xs text-gray-500 leading-relaxed">Nahtlose Integration mit Microsoft Outlook oder Gmail für E-Mail-Monitoring.</p>
+          </div>
+          <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
+            <div class="w-10 h-10 mx-auto flex items-center justify-center rounded-lg bg-brand-600/10 text-brand-400 mb-4" aria-hidden="true">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+            </div>
+            <h3 class="text-sm font-semibold text-white mb-1">Analytics Dashboard</h3>
+            <p class="text-xs text-gray-500 leading-relaxed">Echtzeit-Monitoring aller Agent-Aktivitäten — Erfolgsraten, Fehler, Performance.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ██ ÜBER UNS ██ -->
+    <section id="ueber-uns" class="relative py-24 sm:py-32">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal max-w-3xl mx-auto text-center">
+          <p class="text-sm font-semibold text-brand-400 uppercase tracking-wider mb-4">Über uns</p>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+            PSI Penta Expertise<br>
+            <span class="gradient-text">trifft modernste KI</span>
+          </h2>
+          <p class="text-lg text-gray-400 leading-relaxed mb-8">
+            PentaFlow AI ist ein spezialisiertes Beratungs- und Entwicklungsteam mit Standorten in Berlin und Wien. Wir verbinden tiefes Know-how in <strong class="text-gray-200">PSI&nbsp;Penta&nbsp;ERP</strong> mit Expertise in künstlicher Intelligenz, um Prozesse zu automatisieren, die bisher nur manuell möglich waren.
+          </p>
+          <p class="text-lg text-gray-400 leading-relaxed mb-12">
+            Unser Ansatz: Kein Standard-Produkt, sondern maßgeschneiderte <strong class="text-gray-200">PSI&nbsp;Penta KI-Agenten</strong>, die exakt auf Ihre Prozesse, Ihre Datenstrukturen und Ihre Anforderungen zugeschnitten sind. Wir sind Ihr Partner für die intelligente Automatisierung Ihrer PSIpenta-Umgebung.
+          </p>
+
+          <div class="grid sm:grid-cols-3 gap-8 text-center">
+            <div>
+              <div class="text-3xl font-bold text-white mb-1">Berlin &amp; Wien</div>
+              <p class="text-sm text-gray-500">Standorte</p>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-white mb-1">100%</div>
+              <p class="text-sm text-gray-500">PSI Penta Fokus</p>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-white mb-1">24/7</div>
+              <p class="text-sm text-gray-500">Agent-Verfügbarkeit</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ██ KONTAKT ██ -->
+    <section id="kontakt" class="relative py-24 sm:py-32">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal max-w-2xl mx-auto">
+          <div class="text-center mb-12">
+            <p class="text-sm font-semibold text-brand-400 uppercase tracking-wider mb-4">Kontakt</p>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+              Lassen Sie uns über Ihre<br>
+              <span class="gradient-text">PSI Penta Prozesse sprechen</span>
+            </h2>
+            <p class="text-lg text-gray-400 leading-relaxed">
+              Erzählen Sie uns, welche PSI&nbsp;Penta Prozesse Sie automatisieren möchten. Wir melden uns innerhalb von 24 Stunden.
+            </p>
+          </div>
+
+          <form action="https://formspree.io/f/mvzbyegg" method="POST" class="space-y-6">
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div>
+                <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Name</label>
+                <input type="text" id="name" name="name" required
+                  class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent transition-all"
+                  placeholder="Ihr Name">
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-300 mb-2">E-Mail</label>
+                <input type="email" id="email" name="email" required
+                  class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent transition-all"
+                  placeholder="ihre@email.de">
+              </div>
+            </div>
+            <div>
+              <label for="company" class="block text-sm font-medium text-gray-300 mb-2">Unternehmen</label>
+              <input type="text" id="company" name="company"
+                class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent transition-all"
+                placeholder="Ihr Unternehmen">
+            </div>
+            <div>
+              <label for="message" class="block text-sm font-medium text-gray-300 mb-2">Nachricht</label>
+              <textarea id="message" name="message" rows="5" required
+                class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent transition-all resize-none"
+                placeholder="Welche PSI Penta Prozesse möchten Sie automatisieren?"></textarea>
+            </div>
+            <button type="submit"
+              class="w-full px-8 py-3.5 text-base font-semibold text-white bg-brand-600 hover:bg-brand-500 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-2 focus:ring-offset-[#09090b]">
+              Nachricht senden
+              <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </button>
+          </form>
+
+          <p class="text-center text-sm text-gray-500 mt-6">
+            Oder direkt per E-Mail: <a href="mailto:info@pentaflow.ai" class="text-brand-400 hover:text-brand-300 transition-colors">info@pentaflow.ai</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-sm text-gray-500">
+          © 2026 PentaFlow AI · Berlin &amp; Wien · <a href="mailto:info@pentaflow.ai" class="hover:text-gray-300 transition-colors">info@pentaflow.ai</a>
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="#" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Impressum</a>
+          <a href="#" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Datenschutz</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    // Particles
+    const particlesContainer = document.getElementById('particles');
+    function createParticle() {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = '100%';
+      particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+      particle.style.animationDelay = Math.random() * 5 + 's';
+      particlesContainer.appendChild(particle);
+      setTimeout(() => particle.remove(), 25000);
+    }
+    // Create particles periodically
+    setInterval(createParticle, 2000);
+    for (let i = 0; i < 8; i++) setTimeout(createParticle, i * 600);
+
+    // Nav background on scroll
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        nav.classList.add('border-white/10');
+        nav.classList.remove('border-white/5');
+      } else {
+        nav.classList.remove('border-white/10');
+        nav.classList.add('border-white/5');
+      }
+    });
+  </script>
+</body>
+</html>
