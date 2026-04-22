@@ -18,3 +18,8 @@ desktop-*.png
 mobile-*.png
 tablet-*.png
 re-*.png
+*-desktop.png
+*-mobile.png
+*-tablet.png
+*-hero.png
+*-hero-top.png
