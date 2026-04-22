@@ -172,8 +172,8 @@ brand: { ... }                                                                  
 ### FIG 07 — Kontakt
 **Zweck:** Conversion-Punkt.
 **Form:** **Keine** — User-Entscheidung. Nur E-Mail als CTA.
-**Layout:** Variante C (Email-as-Hero) — `info@pentaflow.ai` in Display-Größe mit Underline + Pfeil, Trust-Microtext „Antwort in 24h · Direkt vom Gründer".
-**Link:** `mailto:info@pentaflow.ai?subject=PSI%20Penta%20Potential-Analyse` (Cal.com/Calendly-Link optional später).
+**Layout:** Variante C (Email-as-Hero) — `hello@pentaflow.ai` in Display-Größe mit Underline + Pfeil, Trust-Microtext „Antwort in 24h · Direkt vom Gründer".
+**Link:** `mailto:hello@pentaflow.ai?subject=PSI%20Penta%20Potential-Analyse` (Cal.com/Calendly-Link optional später).
 
 ### Footer
 **Unverändert:** Copyright · Impressum · Datenschutz. Container auf `max-w-7xl px-6` angeglichen für saubere Vertikal-Linie.
