@@ -204,9 +204,16 @@
   }
   </script>
 
-  <link rel="preload" href="/fonts/space-grotesk-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/inter-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css">
+  <!-- Critical FOUC prevention before async CSS -->
+  <style>html,body{background:#04060a;color:#e5e7eb;margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif}</style>
+
+  <!-- Preload critical fonts -->
+  <link rel="preload" href="fonts/space-grotesk-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/inter-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- Async stylesheet (non-render-blocking) with noscript fallback -->
+  <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="style.css"></noscript>
   <style>
     html { scroll-behavior: smooth; }
     body {

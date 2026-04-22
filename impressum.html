@@ -12,7 +12,9 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
 
-  <link rel="stylesheet" href="style.css">
+  <style>html,body{background:#04060a;color:#e5e7eb;margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif}</style>
+  <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="style.css"></noscript>
   <style>
     html { scroll-behavior: smooth; }
     body {
@@ -40,8 +42,8 @@
   <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-ink-0/85 border-b hairline">
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex items-center justify-between h-16">
-        <a href="index.html" class="flex items-center gap-2.5" aria-label="PentaFlow AI Startseite">
-          <img src="pentaflow%20logo.svg" alt="PentaFlow AI Logo" class="w-6 h-6 opacity-90">
+        <a href="index.html" class="flex items-center gap-2.5">
+          <img src="pentaflow%20logo.svg" alt="" aria-hidden="true" class="w-6 h-6 opacity-90">
           <span class="font-display text-sm font-semibold tracking-tight" style="color:#D9D9D9">PentaFlow</span>
         </a>
         <a href="index.html" class="px-2.5 py-1.5 rounded border hairline text-[11px] font-mono text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">← Zurück zur Startseite</a>
@@ -69,7 +71,7 @@
         <section>
           <h2 class="font-display text-lg font-semibold text-white mb-3">Kontakt</h2>
           <p>
-            E-Mail: <a href="mailto:hello@pentaflow.ai" class="text-ice-400 hover:text-ice-300 transition-colors">hello@pentaflow.ai</a>
+            E-Mail: <a href="mailto:hello@pentaflow.ai" class="underline text-ice-400 hover:text-ice-300 transition-colors">hello@pentaflow.ai</a>
           </p>
         </section>
 
@@ -86,7 +88,7 @@
           <h2 class="font-display text-lg font-semibold text-white mb-3">EU-Streitschlichtung</h2>
           <p>
             Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
-            <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" class="text-ice-400 hover:text-ice-300 transition-colors">https://ec.europa.eu/consumers/odr/</a>.
+            <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" class="underline text-ice-400 hover:text-ice-300 transition-colors">https://ec.europa.eu/consumers/odr/</a>.
           </p>
           <p class="mt-2">
             Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
@@ -100,12 +102,12 @@
   <footer class="border-t hairline py-12">
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="text-sm text-gray-500">
-          © 2026 PentaFlow AI · Berlin &amp; Wien · <a href="mailto:hello@pentaflow.ai" class="hover:text-gray-300 transition-colors">hello@pentaflow.ai</a>
+        <div class="text-sm text-gray-400">
+          © 2026 PentaFlow AI · Berlin &amp; Wien · <a href="mailto:hello@pentaflow.ai" class="underline hover:text-gray-300 transition-colors">hello@pentaflow.ai</a>
         </div>
         <div class="flex items-center gap-6">
-          <a href="impressum.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Impressum</a>
-          <a href="datenschutz.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Datenschutz</a>
+          <a href="impressum.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors">Impressum</a>
+          <a href="datenschutz.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors">Datenschutz</a>
         </div>
       </div>
     </div>
