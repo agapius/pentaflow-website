@@ -1,7 +1,7 @@
 # pentaflow.ai — Design & Site Documentation
 
 Zentrales Dokument für alle Entscheidungen, die in die neue Website eingeflossen sind.
-Stand: 2026-04-22 (Phase 2 Migration abgeschlossen — alle Sektionen in Produktion).
+Stand: 2026-04-22 (Phase 3 Polish-Runde abgeschlossen — siehe Abschnitt 15).
 
 ---
 
@@ -365,3 +365,40 @@ pentaflow/
 ├── node_modules/
 └── venv/
 ```
+
+---
+
+## 15. Polish-Runde 2026-04-22 (Phase 3)
+
+Design-Review-getriebene Nachjustierung nach der Phase-2-Migration. Sechs Commits, alle im `main`-Branch. Leitprinzip: die Grundarchitektur (Palette, Typo, Linear-minimal DNA, Copy, Layout) bleibt unangetastet — korrigiert wird nur, wo Inkonsistenz oder Mobile-Defizite sichtbar wurden.
+
+### Phase 1 — Quick wins (`429509d`)
+- **Hero-Pill** auf „Zwei Agenten live" gekürzt (Original wrapppte auf 375)
+- **FAQ 1** (ERP-agnostisch) als `<details open>` vorab ausgeklappt — signalisiert „hier sind Antworten", nicht „hier sind sechs verschlossene Türen"
+- **Impact-Zelle 4** strukturell auf identisches Pattern wie die anderen drei gebracht (giant `4` + Mono-Label `Wochen bis live` darunter; vorher war `Wochen` inline als zweite Schriftgröße + zweizeiliges Untertitel — einziger Ausreißer der Reihe)
+- **FAQ aus Nav entfernt** (Desktop + Mobile) — Nav von 5 auf 4 Links; der boxed-Mono-Stil gewinnt an Gewicht zurück
+
+### Phase 2 — Mobile Hero Proof-Strip (`cf0ee4d`)
+Auf Desktop trägt das Seite-an-Seite-Layout (Rechnung links, ERP-Record rechts) die „vorher→nachher"-Geschichte. Auf Mobile bricht das Stacking diesen kausalen Pfeil. Gelöst durch einen `md:hidden` Mono-Label-Divider zwischen den beiden Karten: `—— AUTOMATISCH GEBUCHT IN PSI PENTA ——`. Rettet das mentale Modell, ohne Desktop zu verändern.
+
+### Phase 3 — Section Rhythm + H2-Variation (`11e8326`)
+- **Impact-H2** kollabiert auf einzeilig inline (`Spürbare Verbesserung. <muted>Kein Marketingversprechen.</muted>`) — einzige bewusste Abweichung vom Zwei-Zeilen-Muted-Muster, damit das Muster anderswo absichtsvoll wirkt
+- **Kundenstimme** `py-28` → `py-20 md:py-28`
+- **FAQ** `py-28` → `py-20 md:py-24`
+→ Sektionsrhythmus ist nicht mehr uniform, fühlt sich deliberater an.
+
+### Phase 4 — Drawn Email CTA (`dce619e`)
+`border-b-2 border-ice-500/40` ersetzt durch CSS-gezeichneten Gradient-Balken (`.email-cta::after`): Ice-Blau links, Fade nach rechts, bei Ruhezustand `scaleX(0.7)`, bei Hover `scaleX(1)` über 500ms Cubic-Bezier. Der einzige Conversion-Punkt der Seite sieht jetzt aus wie ein entworfenes Detail statt nach Default-Link.
+
+### Phase 5 — Prozess-Pfeile entfernt (`caabebe`)
+Die zwei floatenden `→` Glyphen in den Gutters zwischen den drei Prozess-Karten waren unverankert — sie lasen sich wie Zufall, nicht wie Absicht. Gelöscht; die `01 · 02 · 03` Mono-Labels tragen die Reihenfolge. Flex-Gap von `gap-5 md:gap-0` auf `gap-5` angeglichen.
+
+**Nicht gemacht:** Pillar-Mockup-Höhen-Angleichung. Die Dichte-Varianz (Config-Panel vs. Checkliste vs. Queue) trägt Information — Flatten würde Charakter kosten.
+
+### Phase 6 — Einmaliger Hero-Sekundenzähler (`94c7d89`)
+Der statische `INBOUND · 14:32:07` Timestamp zählt beim ersten Scroll-into-view einmalig von `00` auf `07` hoch (180ms pro Tick, ~1.4s gesamt). Nicht loopend — IntersectionObserver disconnectet nach erstem Hit. Verkauft „das passiert gerade", ohne die Linear-Zurückhaltung zu brechen.
+
+**Nicht gemacht:** Pentagon-Motiv außerhalb der Nav. Jeder naheliegende Placement-Kandidat kollidierte entweder mit einem bestehenden semantischen Indikator (pulsierender Live-Dot) oder hätte als dekoratives Rauschen gewirkt. Verschoben auf spätere Runde, falls passender Anlass.
+
+### Nicht angetastet (bewusst)
+- Palette (Ink + Navy + Ice) · Typografie (Space Grotesk / Inter / JetBrains Mono) · Editorial Testimonial-Split · Hero-Animation-Timing · Pillar-Inhalte · FIG 05 Portrait-Forward · Kontakt-Struktur (Email-as-Hero) · SEO-JSON-LD · Footer · Assets
