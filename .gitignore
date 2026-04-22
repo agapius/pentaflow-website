@@ -24,3 +24,11 @@ re-*.png
 *-tablet.png
 *-hero.png
 *-hero-top.png
+# Audit/debug screenshots at viewport sizes
+*-375.png
+*-414.png
+*-640.png
+*-768.png
+*-1024.png
+*-1440.png
+*-fix-*.png
