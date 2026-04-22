@@ -436,7 +436,7 @@
           <div class="absolute inset-0 bg-lattice opacity-60 pointer-events-none"></div>
           <div class="absolute inset-0 bg-navy-glow opacity-60 pointer-events-none"></div>
 
-          <div class="absolute top-5 left-6 font-mono text-[10px] tracking-widest text-gray-400 uppercase">Inbound · 14:32:07</div>
+          <div class="absolute top-5 left-6 font-mono text-[10px] tracking-widest text-gray-400 uppercase">Inbound · 14:32:<span id="hero-seconds" data-from="0" data-to="7">07</span></div>
           <div class="absolute top-5 right-6 font-mono text-[10px] tracking-widest text-gray-400 uppercase">Pipeline · invoices</div>
 
           <div class="relative grid md:grid-cols-12 gap-10 px-6 md:px-14 py-16">
@@ -1215,6 +1215,25 @@
         entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
       }, { threshold: 0.15 });
       reveals.forEach(el => io.observe(el));
+    }
+
+    // Hero seconds counter — runs once on first reveal, does not loop
+    const seconds = document.getElementById('hero-seconds');
+    if (seconds && 'IntersectionObserver' in window) {
+      const from = +seconds.dataset.from, to = +seconds.dataset.to;
+      const pad = n => String(n).padStart(2, '0');
+      seconds.textContent = pad(from);
+      const tick = new IntersectionObserver((entries, obs) => {
+        if (!entries[0].isIntersecting) return;
+        obs.disconnect();
+        let n = from;
+        const step = () => {
+          seconds.textContent = pad(n);
+          if (n < to) { n++; setTimeout(step, 180); }
+        };
+        step();
+      }, { threshold: 0.4 });
+      tick.observe(seconds);
     }
   </script>
 </body>
