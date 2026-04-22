@@ -10,6 +10,7 @@ package-lock.json
 .playwright-mcp/
 venv/
 og-template.html
+.lighthouse/
 
 # Local snapshots & audit artifacts (not for production repo)
 prototypes*.html
