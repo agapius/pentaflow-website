@@ -4,3 +4,15 @@ tailwind.config.js
 package.json
 package-lock.json
 .DS_Store
+
+# Dev / tooling
+.mcp.json
+.playwright-mcp/
+venv/
+
+# Local snapshots & audit artifacts (not for production repo)
+prototypes*.html
+index-legacy.html
+desktop-*.png
+mobile-*.png
+tablet-*.png
