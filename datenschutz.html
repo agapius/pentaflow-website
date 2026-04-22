@@ -7,13 +7,30 @@
   <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://pentaflow.ai/datenschutz.html">
 
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
   <link rel="stylesheet" href="style.css">
   <style>
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-    .nav-blur {
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+    body {
+      font-feature-settings: 'ss01', 'cv11';
+      -webkit-font-smoothing: antialiased;
+    }
+    .hairline { border-color: rgba(255,255,255,0.06); }
+    .hairline-strong { border-color: rgba(255,255,255,0.1); }
+    .nav-blur { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: #5b8eff;
+    }
+    .section-label::before {
+      content: ""; display: inline-block; width: 24px; height: 1px;
+      background: #3478ff;
     }
     .prose h2 { margin-top: 2.5rem; }
     .prose h3 { margin-top: 1.5rem; }
@@ -22,26 +39,28 @@
     .prose li { margin-top: 0.25rem; }
   </style>
 </head>
-<body class="bg-[#09090b] text-gray-200 antialiased">
+<body class="bg-ink-0 text-gray-200 antialiased">
 
   <!-- Navigation -->
-  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-[#09090b]/80 border-b border-white/5">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-ink-0/85 border-b hairline">
+    <div class="max-w-7xl mx-auto px-6">
       <div class="flex items-center justify-between h-16">
-        <a href="/" class="text-xl font-bold tracking-tight text-white">
-          Penta<span class="text-brand-500">Flow</span>
+        <a href="/" class="flex items-center gap-2.5" aria-label="PentaFlow AI Startseite">
+          <img src="pentaflow%20logo.svg" alt="PentaFlow AI Logo" class="w-6 h-6 opacity-90">
+          <span class="font-display text-sm font-semibold tracking-tight" style="color:#D9D9D9">PentaFlow</span>
         </a>
-        <a href="/" class="text-sm text-gray-400 hover:text-white transition-colors">← Zurück zur Startseite</a>
+        <a href="/" class="px-2.5 py-1.5 rounded border hairline text-[11px] font-mono text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">← Zurück zur Startseite</a>
       </div>
     </div>
   </nav>
 
   <main class="pt-32 pb-24">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 prose text-gray-300 leading-relaxed">
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-12">Datenschutzerklärung</h1>
+    <div class="max-w-3xl mx-auto px-6 prose text-gray-300 leading-relaxed">
+      <p class="section-label mb-6">Rechtliches</p>
+      <h1 class="font-display text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05] mb-12">Datenschutzerklärung</h1>
 
       <!-- 1. Verantwortlicher -->
-      <h2 class="text-xl font-semibold text-white">1. Verantwortlicher</h2>
+      <h2 class="font-display text-xl font-semibold text-white">1. Verantwortlicher</h2>
       <p>
         Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:
       </p>
@@ -50,17 +69,17 @@
         Pentaflow<br>
         Christburger Straße 38<br>
         10405 Berlin<br>
-        E-Mail: <a href="mailto:hello@pentaflow.ai" class="text-brand-400 hover:text-brand-300 transition-colors">hello@pentaflow.ai</a>
+        E-Mail: <a href="mailto:hello@pentaflow.ai" class="text-ice-400 hover:text-ice-300 transition-colors">hello@pentaflow.ai</a>
       </p>
 
       <!-- 2. Allgemeines -->
-      <h2 class="text-xl font-semibold text-white">2. Allgemeines zur Datenverarbeitung</h2>
+      <h2 class="font-display text-xl font-semibold text-white">2. Allgemeines zur Datenverarbeitung</h2>
       <p>
         Wir verarbeiten personenbezogene Daten unserer Nutzer grundsätzlich nur, soweit dies zur Bereitstellung einer funktionsfähigen Website sowie unserer Inhalte und Leistungen erforderlich ist. Die Verarbeitung personenbezogener Daten erfolgt regelmäßig nur nach Einwilligung des Nutzers oder wenn die Verarbeitung durch gesetzliche Vorschriften gestattet ist.
       </p>
 
       <!-- 3. Hosting -->
-      <h2 class="text-xl font-semibold text-white">3. Hosting</h2>
+      <h2 class="font-display text-xl font-semibold text-white">3. Hosting</h2>
       <p>
         Diese Website wird bei <strong class="text-white">GitHub Pages</strong> (GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) gehostet. Beim Aufruf unserer Website werden durch den Hosting-Anbieter automatisch Informationen in sogenannten Server-Log-Dateien gespeichert, die Ihr Browser automatisch übermittelt. Dies sind:
       </p>
@@ -74,47 +93,38 @@
         <li>Referrer URL</li>
       </ul>
       <p>
-        Die Rechtsgrundlage für die Datenverarbeitung ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse besteht in der korrekten Bereitstellung der Website. GitHub verarbeitet Daten ggf. in den USA. Es besteht ein Angemessenheitsbeschluss der EU-Kommission (EU-U.S. Data Privacy Framework). Weitere Informationen finden Sie in der <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:text-brand-300 transition-colors">Datenschutzerklärung von GitHub</a>.
+        Die Rechtsgrundlage für die Datenverarbeitung ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse besteht in der korrekten Bereitstellung der Website. GitHub verarbeitet Daten ggf. in den USA. Es besteht ein Angemessenheitsbeschluss der EU-Kommission (EU-U.S. Data Privacy Framework). Weitere Informationen finden Sie in der <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer" class="text-ice-400 hover:text-ice-300 transition-colors">Datenschutzerklärung von GitHub</a>.
       </p>
 
       <!-- 4. Schriftarten -->
-      <h2 class="text-xl font-semibold text-white">4. Schriftarten</h2>
+      <h2 class="font-display text-xl font-semibold text-white">4. Schriftarten</h2>
       <p>
-        Diese Website nutzt die Schriftart „Inter", die <strong class="text-white">lokal auf unserem Server gehostet</strong> wird. Beim Laden der Schriftarten wird keine Verbindung zu externen Servern hergestellt. Es werden keine Daten an Dritte übermittelt.
+        Diese Website nutzt die Schriftarten „Inter", „Space Grotesk" und „JetBrains Mono", die <strong class="text-white">lokal auf unserem Server gehostet</strong> werden. Beim Laden der Schriftarten wird keine Verbindung zu externen Servern hergestellt. Es werden keine Daten an Dritte übermittelt.
       </p>
 
-      <!-- 5. Kontaktformular -->
-      <h2 class="text-xl font-semibold text-white">5. Kontaktformular (Formspree)</h2>
+      <!-- 5. Kontakt per E-Mail -->
+      <h2 class="font-display text-xl font-semibold text-white">5. Kontaktaufnahme per E-Mail</h2>
       <p>
-        Wenn Sie uns über das Kontaktformular kontaktieren, werden Ihre Angaben (Name, E-Mail-Adresse, Unternehmen, Nachricht) an den Dienst <strong class="text-white">Formspree</strong> (Formspree Inc., USA) übermittelt und per E-Mail an uns weitergeleitet. Formspree speichert die übermittelten Daten auf seinen Servern.
+        Unsere Kontaktaufnahme erfolgt ausschließlich per E-Mail. Wenn Sie uns per E-Mail kontaktieren, werden Ihre Angaben einschließlich der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert. Die Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bearbeitung Ihrer Anfrage).
       </p>
       <p>
-        Die Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bearbeitung Ihrer Anfrage). Formspree verarbeitet Daten in den USA (EU-U.S. Data Privacy Framework). Weitere Informationen finden Sie in der <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:text-brand-300 transition-colors">Datenschutzerklärung von Formspree</a>.
-      </p>
-      <p>
-        Die von Ihnen im Kontaktformular eingegebenen Daten verbleiben bei uns, bis Sie uns zur Löschung auffordern oder der Zweck für die Datenspeicherung entfällt. Zwingende gesetzliche Aufbewahrungsfristen bleiben unberührt.
+        Die von Ihnen per E-Mail übermittelten Daten verbleiben bei uns, bis Sie uns zur Löschung auffordern oder der Zweck für die Datenspeicherung entfällt. Zwingende gesetzliche Aufbewahrungsfristen bleiben unberührt.
       </p>
 
-      <!-- 6. E-Mail-Kontakt -->
-      <h2 class="text-xl font-semibold text-white">6. Kontaktaufnahme per E-Mail</h2>
-      <p>
-        Wenn Sie uns per E-Mail kontaktieren, werden Ihre Angaben einschließlich der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert. Die Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO bzw. Art. 6 Abs. 1 lit. f DSGVO.
-      </p>
-
-      <!-- 7. Cookies -->
-      <h2 class="text-xl font-semibold text-white">7. Cookies</h2>
+      <!-- 6. Cookies -->
+      <h2 class="font-display text-xl font-semibold text-white">6. Cookies</h2>
       <p>
         Diese Website verwendet <strong class="text-white">keine Cookies</strong>.
       </p>
 
-      <!-- 8. Keine Analyse-Tools -->
-      <h2 class="text-xl font-semibold text-white">8. Analyse-Tools und Tracking</h2>
+      <!-- 7. Keine Analyse-Tools -->
+      <h2 class="font-display text-xl font-semibold text-white">7. Analyse-Tools und Tracking</h2>
       <p>
         Diese Website verwendet <strong class="text-white">keine Analyse- oder Tracking-Tools</strong>. Es findet kein Tracking Ihres Nutzungsverhaltens statt.
       </p>
 
-      <!-- 9. Betroffenenrechte -->
-      <h2 class="text-xl font-semibold text-white">9. Ihre Rechte</h2>
+      <!-- 8. Betroffenenrechte -->
+      <h2 class="font-display text-xl font-semibold text-white">8. Ihre Rechte</h2>
       <p>
         Sie haben gegenüber uns folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:
       </p>
@@ -127,16 +137,16 @@
         <li><strong class="text-gray-300">Widerspruchsrecht</strong> (Art. 21 DSGVO)</li>
       </ul>
       <p>
-        Zur Ausübung Ihrer Rechte wenden Sie sich bitte an: <a href="mailto:hello@pentaflow.ai" class="text-brand-400 hover:text-brand-300 transition-colors">hello@pentaflow.ai</a>
+        Zur Ausübung Ihrer Rechte wenden Sie sich bitte an: <a href="mailto:hello@pentaflow.ai" class="text-ice-400 hover:text-ice-300 transition-colors">hello@pentaflow.ai</a>
       </p>
       <p>
         Darüber hinaus haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung Ihrer personenbezogenen Daten zu beschweren. Die für uns zuständige Aufsichtsbehörde ist die <strong class="text-white">Berliner Beauftragte für Datenschutz und Informationsfreiheit</strong>, Friedrichstr. 219, 10969 Berlin.
       </p>
 
-      <!-- 10. Aktualität -->
-      <h2 class="text-xl font-semibold text-white">10. Aktualität dieser Datenschutzerklärung</h2>
+      <!-- 9. Aktualität -->
+      <h2 class="font-display text-xl font-semibold text-white">9. Aktualität dieser Datenschutzerklärung</h2>
       <p>
-        Stand: März 2026
+        Stand: April 2026
       </p>
       <p>
         Wir behalten uns vor, diese Datenschutzerklärung anzupassen, um sie an geänderte Rechtslagen oder bei Änderungen unserer Datenverarbeitungen anzupassen.
@@ -145,11 +155,11 @@
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-white/5 py-12">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+  <footer class="border-t hairline py-12">
+    <div class="max-w-7xl mx-auto px-6">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="text-sm text-gray-500">
-          © 2026 PentaFlow AI · Berlin &amp; Wien · <a href="mailto:hello@pentaflow.ai" class="hover:text-gray-300 transition-colors">hello@pentaflow.ai</a>
+          © 2026 PentaFlow AI · Berlin &amp; Wien · <a href="mailto:info@pentaflow.ai" class="hover:text-gray-300 transition-colors">info@pentaflow.ai</a>
         </div>
         <div class="flex items-center gap-6">
           <a href="/impressum.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Impressum</a>

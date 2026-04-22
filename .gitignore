@@ -9,6 +9,7 @@ package-lock.json
 .mcp.json
 .playwright-mcp/
 venv/
+og-template.html
 
 # Local snapshots & audit artifacts (not for production repo)
 prototypes*.html
@@ -16,3 +17,4 @@ index-legacy.html
 desktop-*.png
 mobile-*.png
 tablet-*.png
+re-*.png

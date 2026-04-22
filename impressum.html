@@ -7,37 +7,56 @@
   <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://pentaflow.ai/impressum.html">
 
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
   <link rel="stylesheet" href="style.css">
   <style>
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-    .nav-blur {
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+    body {
+      font-feature-settings: 'ss01', 'cv11';
+      -webkit-font-smoothing: antialiased;
+    }
+    .hairline { border-color: rgba(255,255,255,0.06); }
+    .hairline-strong { border-color: rgba(255,255,255,0.1); }
+    .nav-blur { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: #5b8eff;
+    }
+    .section-label::before {
+      content: ""; display: inline-block; width: 24px; height: 1px;
+      background: #3478ff;
     }
   </style>
 </head>
-<body class="bg-[#09090b] text-gray-200 antialiased">
+<body class="bg-ink-0 text-gray-200 antialiased">
 
   <!-- Navigation -->
-  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-[#09090b]/80 border-b border-white/5">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-ink-0/85 border-b hairline">
+    <div class="max-w-7xl mx-auto px-6">
       <div class="flex items-center justify-between h-16">
-        <a href="/" class="text-xl font-bold tracking-tight text-white">
-          Penta<span class="text-brand-500">Flow</span>
+        <a href="/" class="flex items-center gap-2.5" aria-label="PentaFlow AI Startseite">
+          <img src="pentaflow%20logo.svg" alt="PentaFlow AI Logo" class="w-6 h-6 opacity-90">
+          <span class="font-display text-sm font-semibold tracking-tight" style="color:#D9D9D9">PentaFlow</span>
         </a>
-        <a href="/" class="text-sm text-gray-400 hover:text-white transition-colors">← Zurück zur Startseite</a>
+        <a href="/" class="px-2.5 py-1.5 rounded border hairline text-[11px] font-mono text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">← Zurück zur Startseite</a>
       </div>
     </div>
   </nav>
 
   <main class="pt-32 pb-24">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-12">Impressum</h1>
+    <div class="max-w-3xl mx-auto px-6">
+      <p class="section-label mb-6">Rechtliches</p>
+      <h1 class="font-display text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05] mb-12">Impressum</h1>
 
-      <div class="space-y-8 text-gray-300 leading-relaxed">
+      <div class="space-y-10 text-gray-300 leading-relaxed">
         <section>
-          <h2 class="text-lg font-semibold text-white mb-3">Angaben gemäß § 5 DDG</h2>
+          <h2 class="font-display text-lg font-semibold text-white mb-3">Angaben gemäß § 5 DDG</h2>
           <p>
             Jasper Castell<br>
             Pentaflow<br>
@@ -48,14 +67,14 @@
         </section>
 
         <section>
-          <h2 class="text-lg font-semibold text-white mb-3">Kontakt</h2>
+          <h2 class="font-display text-lg font-semibold text-white mb-3">Kontakt</h2>
           <p>
-            E-Mail: <a href="mailto:hello@pentaflow.ai" class="text-brand-400 hover:text-brand-300 transition-colors">hello@pentaflow.ai</a>
+            E-Mail: <a href="mailto:hello@pentaflow.ai" class="text-ice-400 hover:text-ice-300 transition-colors">hello@pentaflow.ai</a>
           </p>
         </section>
 
         <section>
-          <h2 class="text-lg font-semibold text-white mb-3">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+          <h2 class="font-display text-lg font-semibold text-white mb-3">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
           <p>
             Jasper Castell<br>
             Christburger Straße 38<br>
@@ -64,10 +83,10 @@
         </section>
 
         <section>
-          <h2 class="text-lg font-semibold text-white mb-3">EU-Streitschlichtung</h2>
+          <h2 class="font-display text-lg font-semibold text-white mb-3">EU-Streitschlichtung</h2>
           <p>
             Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
-            <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:text-brand-300 transition-colors">https://ec.europa.eu/consumers/odr/</a>.
+            <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" class="text-ice-400 hover:text-ice-300 transition-colors">https://ec.europa.eu/consumers/odr/</a>.
           </p>
           <p class="mt-2">
             Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
@@ -78,11 +97,11 @@
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-white/5 py-12">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+  <footer class="border-t hairline py-12">
+    <div class="max-w-7xl mx-auto px-6">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="text-sm text-gray-500">
-          © 2026 PentaFlow AI · Berlin &amp; Wien · <a href="mailto:hello@pentaflow.ai" class="hover:text-gray-300 transition-colors">hello@pentaflow.ai</a>
+          © 2026 PentaFlow AI · Berlin &amp; Wien · <a href="mailto:info@pentaflow.ai" class="hover:text-gray-300 transition-colors">info@pentaflow.ai</a>
         </div>
         <div class="flex items-center gap-6">
           <a href="/impressum.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Impressum</a>
