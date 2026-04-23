@@ -43,7 +43,13 @@ prod-*.png
 prod-*.jpg
 variants-*.png
 variants-*.jpg
-final-*-full.png
-final-*-full.jpg
+final-*.png
+final-*.jpg
+proto-*.png
+proto-*.jpg
+wired-*.png
+wired-*.jpg
+# Mobile hero prototypes (not the canonical hero-animation-v1-final.html)
+hero-mobile-*.html
 # Playwright snapshot dumps
 *-snap.yml
