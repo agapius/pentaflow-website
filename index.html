@@ -516,6 +516,17 @@
       border-radius: 6px; z-index: 100; transition: top 0.2s;
     }
     .skip-link:focus { top: 8px; }
+
+    /* Reduced motion — show final extracted state, no animation */
+    @media (prefers-reduced-motion: reduce) {
+      .v1-stage-loop, .v1-line path, [class*="v1-marker"], [class*="v1-chip"],
+      [class*="v1-packet"], [class*="v1-skel"], [class*="v1-fill"], .v1-confidence,
+      .animate-pulse, .pulse-ring::after {
+        animation: none !important;
+      }
+      .v1-stage-loop, [class*="v1-fill"], .v1-confidence { opacity: 1 !important; }
+      [class*="v1-skel"] { display: none !important; }
+    }
   </style>
 </head>
 <body class="bg-ink-0 text-gray-200 antialiased">
@@ -1173,7 +1184,7 @@
         </div>
 
         <div class="rounded-2xl border hairline overflow-hidden bg-ink-2">
-          <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 divide-y sm:divide-x md:divide-y-0 divide-white/5">
             <div class="p-8 md:p-10 flex flex-col justify-between min-h-[180px]">
               <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Rechnungen</div>
               <div>
