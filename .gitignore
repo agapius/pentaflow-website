@@ -34,3 +34,16 @@ re-*.png
 *-fix-*.png
 review-*.png
 berlin-*.png
+# Session-prefixed exploration screenshots (v1-*, v2-*, p1-*, …, prod-*, variants-*, final-*-full)
+v[0-9]*-*.png
+v[0-9]*-*.jpg
+p[0-9]*-*.png
+p[0-9]*-*.jpg
+prod-*.png
+prod-*.jpg
+variants-*.png
+variants-*.jpg
+final-*-full.png
+final-*-full.jpg
+# Playwright snapshot dumps
+*-snap.yml
