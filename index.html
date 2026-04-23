@@ -292,33 +292,32 @@
       background: linear-gradient(90deg, #3478ff 0%, #5b8eff 100%);
     }
 
-    /* =================================
-       HERO — INVOICE FLOW ANIMATION
-       ================================= */
+    /* =============================================================
+       HERO — V1 PIPE & PACKET (10s loop)
+       Story: markers draw on the invoice (the "reading"), then the
+       combined chip appears (the "extraction"), a packet flies along the
+       glowing line into PSI Penta, skeletons fade as values cascade in,
+       and STATUS lands as the climactic green beat together with the
+       98% confidence badge. 4s hold, fade, blank gap, restart.
+
+       Timeline (10s loop):
+         0.0 - 0.20  stage fade in
+         0.5 → 0.9   step 1 markers draw  (Lieferant + UID on invoice)
+         1.0         chip 1 appears        (Lieferant + UID validiert)
+         1.5 → 1.8   packet 1 flies        (invoice → PSI Penta)
+         1.8 / 1.9   SUPPLIER / UID rows fill
+         2.5 → 2.9   step 2 markers draw  (Bestell-Nr + Gesamt)
+         3.0         chip 2 appears        (Bestellung + Betrag abgeglichen)
+         3.5 → 3.8   packet 2 flies
+         3.8 → 4.1   RECORD → ORDER_REF → AMOUNT_NET → AMOUNT_GROSS cascade
+         4.2         STATUS + 98% confidence land together (climactic beat)
+         5.0 → 9.0   HOLD (4s of settled state)
+         9.0 → 9.5   stage fade out
+         9.5 → 10.0  blank gap before restart
+       ============================================================= */
     .proto01-stage { position: relative; }
-    .proto01-loop { animation: proto01 13s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
-    @keyframes proto01 {
-      0%, 98%, 100% { opacity: 0; }
-      2%, 95% { opacity: 1; }
-    }
 
-    .stage-appear {
-      opacity: 0;
-      transform: translateY(6px);
-      animation: stageAppear 13s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-    }
-    @keyframes stageAppear {
-      0%, 100% { opacity: 0; transform: translateY(6px); }
-      8%, 92% { opacity: 1; transform: translateY(0); }
-    }
-    .delay-0 { animation-delay: 0.4s; }
-    .delay-1 { animation-delay: 1.8s; }
-    .delay-2 { animation-delay: 3.2s; }
-    .delay-3 { animation-delay: 4.6s; }
-    .delay-4 { animation-delay: 6.0s; }
-    .delay-5 { animation-delay: 7.6s; }
-    .delay-6 { animation-delay: 8.8s; }
-
+    /* Shared marker (drawn highlight on invoice values) — animation comes from .v1-marker-s1 / .v1-marker-s2 */
     .marker-underline {
       position: absolute;
       height: 22px;
@@ -327,41 +326,187 @@
       border: 1px solid rgba(52,120,255,0.45);
       transform-origin: left center;
       transform: scaleX(0);
-      animation: markerDraw 13s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-    }
-    @keyframes markerDraw {
-      0%, 100% { transform: scaleX(0); opacity: 0; }
-      6% { opacity: 1; }
-      14% { transform: scaleX(1); opacity: 1; }
-      92% { transform: scaleX(1); opacity: 1; }
     }
     .marker-green {
       background: linear-gradient(90deg, rgba(16,185,129,0.22), rgba(16,185,129,0.06));
       border-color: rgba(16,185,129,0.5);
     }
 
-    .connect-line path {
-      stroke-dasharray: 400;
-      stroke-dashoffset: 400;
-      animation: drawLine 13s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-    }
-    @keyframes drawLine {
-      0%, 60%, 100% { stroke-dashoffset: 400; opacity: 0; }
-      62% { opacity: 1; }
-      72%, 95% { stroke-dashoffset: 0; opacity: 1; }
+    /* Stage wrapper — fades in at start, holds, fades out before blank gap */
+    .v1-stage-loop { animation: v1StageLoop 10s linear infinite; }
+    @keyframes v1StageLoop {
+      0%, 100% { opacity: 0; }
+      2%, 90% { opacity: 1; }
+      95% { opacity: 0; }
     }
 
-    .check-pulse { animation: checkPulse 13s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
-    @keyframes checkPulse {
-      0%, 100% { transform: scale(0.9); opacity: 0; }
-      8%, 12% { transform: scale(1.08); opacity: 1; }
-      14%, 92% { transform: scale(1); opacity: 1; }
+    /* Persistent connecting line — bright, end-to-end visible during hold */
+    .v1-line { filter: drop-shadow(0 0 6px rgba(91, 142, 255, 0.6)); }
+    .v1-line path { stroke-dasharray: 400; stroke-dashoffset: 400; animation: v1LineDraw 10s ease-out infinite; stroke-width: 2.5px; }
+    @keyframes v1LineDraw {
+      0% { stroke-dashoffset: 400; opacity: 0; }
+      3% { opacity: 1; }
+      7% { stroke-dashoffset: 0; opacity: 1; }
+      90% { opacity: 1; stroke-dashoffset: 0; }
+      95%, 100% { opacity: 0; stroke-dashoffset: 0; }
     }
 
-    .badge-float { animation: badgeFloat 6s ease-in-out infinite; }
-    @keyframes badgeFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
+    /* === MARKERS (the "reading" pass on the invoice) === */
+    .v1-marker-s1 { animation: v1MarkerS1 10s linear infinite; transform-origin: left center; }
+    @keyframes v1MarkerS1 {
+      0%, 4% { transform: scaleX(0); opacity: 0; }
+      5% { transform: scaleX(0.05); opacity: 1; }
+      9% { transform: scaleX(1); opacity: 1; }
+      90% { transform: scaleX(1); opacity: 1; }
+      95%, 100% { transform: scaleX(1); opacity: 0; }
+    }
+    .v1-marker-s2 { animation: v1MarkerS2 10s linear infinite; transform-origin: left center; }
+    @keyframes v1MarkerS2 {
+      0%, 24% { transform: scaleX(0); opacity: 0; }
+      25% { transform: scaleX(0.05); opacity: 1; }
+      29% { transform: scaleX(1); opacity: 1; }
+      90% { transform: scaleX(1); opacity: 1; }
+      95%, 100% { transform: scaleX(1); opacity: 0; }
+    }
+
+    /* === COMBINED CHIPS (the "extraction" — only after markers finish) === */
+    .v1-chip-s1 { animation: v1ChipS1 10s linear infinite; opacity: 0; }
+    @keyframes v1ChipS1 {
+      0%, 9% { opacity: 0; transform: translateY(6px); }
+      10% { opacity: 0.4; transform: translateY(3px); }
+      14% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; transform: translateY(0); }
+      95%, 100% { opacity: 0; transform: translateY(0); }
+    }
+    .v1-chip-s2 { animation: v1ChipS2 10s linear infinite; opacity: 0; }
+    @keyframes v1ChipS2 {
+      0%, 29% { opacity: 0; transform: translateY(6px); }
+      30% { opacity: 0.4; transform: translateY(3px); }
+      34% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; transform: translateY(0); }
+      95%, 100% { opacity: 0; transform: translateY(0); }
+    }
+
+    /* === PACKETS (one-shot per loop, fade out after landing) === */
+    .v1-packet-1 { animation: v1Packet1 10s linear infinite; opacity: 0; }
+    @keyframes v1Packet1 {
+      0%, 14.9% { opacity: 0; transform: translateX(0); }
+      15% { opacity: 1; transform: translateX(0); }
+      18% { opacity: 1; transform: translateX(220px); }
+      18.5% { opacity: 0; transform: translateX(220px); }
+      100% { opacity: 0; transform: translateX(0); }
+    }
+    .v1-packet-2 { animation: v1Packet2 10s linear infinite; opacity: 0; }
+    @keyframes v1Packet2 {
+      0%, 34.9% { opacity: 0; transform: translateX(0); }
+      35% { opacity: 1; transform: translateX(0); }
+      38% { opacity: 1; transform: translateX(220px); }
+      38.5% { opacity: 0; transform: translateX(220px); }
+      100% { opacity: 0; transform: translateX(0); }
+    }
+    .v1-packet-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #8ec0ff;
+      box-shadow: 0 0 22px 4px rgba(140,192,255,0.95), 0 0 40px 8px rgba(52,120,255,0.5);
+    }
+
+    /* === SHIMMER (independent, runs continuously on skeleton bg) === */
+    @keyframes v1Shimmer {
+      0% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+    .v1-skel-bg {
+      display: inline-block;
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.14) 50%, rgba(255,255,255,0.04) 100%);
+      background-size: 200% 100%;
+      vertical-align: middle;
+    }
+
+    /* === PER-ROW SKELETON FADE + VALUE FILL keyframes === */
+    /* SUPPLIER  — t=1.8s = 18% */
+    .v1-skel-supplier  { animation: v1Shimmer 1.6s linear infinite, v1SkelSupplier 10s linear infinite; }
+    .v1-fill-supplier  { animation: v1FillSupplier 10s linear infinite; opacity: 0; }
+    @keyframes v1SkelSupplier { 0%, 17% { opacity: 1; } 18%, 90% { opacity: 0; } 95%, 100% { opacity: 1; } }
+    @keyframes v1FillSupplier {
+      0%, 17% { opacity: 0; }
+      18% { opacity: 1; color: #8ec0ff; text-shadow: 0 0 12px rgba(140,192,255,0.7); }
+      22% { color: inherit; text-shadow: none; }
+      90% { opacity: 1; }
+      95%, 100% { opacity: 0; }
+    }
+    /* UID  — t=1.9s = 19% */
+    .v1-skel-uid { animation: v1Shimmer 1.6s linear infinite, v1SkelUID 10s linear infinite; }
+    .v1-fill-uid { animation: v1FillUID 10s linear infinite; opacity: 0; }
+    @keyframes v1SkelUID { 0%, 18% { opacity: 1; } 19%, 90% { opacity: 0; } 95%, 100% { opacity: 1; } }
+    @keyframes v1FillUID {
+      0%, 18% { opacity: 0; }
+      19% { opacity: 1; color: #8ec0ff; text-shadow: 0 0 12px rgba(140,192,255,0.7); }
+      23% { color: inherit; text-shadow: none; }
+      90% { opacity: 1; }
+      95%, 100% { opacity: 0; }
+    }
+    /* RECORD  — t=3.8s = 38% */
+    .v1-skel-record { animation: v1Shimmer 1.6s linear infinite, v1SkelRecord 10s linear infinite; }
+    .v1-fill-record { animation: v1FillRecord 10s linear infinite; opacity: 0; }
+    @keyframes v1SkelRecord { 0%, 37% { opacity: 1; } 38%, 90% { opacity: 0; } 95%, 100% { opacity: 1; } }
+    @keyframes v1FillRecord {
+      0%, 37% { opacity: 0; }
+      38% { opacity: 1; color: #8ec0ff; text-shadow: 0 0 12px rgba(140,192,255,0.7); }
+      42% { color: inherit; text-shadow: none; }
+      90% { opacity: 1; }
+      95%, 100% { opacity: 0; }
+    }
+    /* ORDER_REF  — t=3.9s = 39% */
+    .v1-skel-orderref { animation: v1Shimmer 1.6s linear infinite, v1SkelOrderRef 10s linear infinite; }
+    .v1-fill-orderref { animation: v1FillOrderRef 10s linear infinite; opacity: 0; }
+    @keyframes v1SkelOrderRef { 0%, 38% { opacity: 1; } 39%, 90% { opacity: 0; } 95%, 100% { opacity: 1; } }
+    @keyframes v1FillOrderRef {
+      0%, 38% { opacity: 0; }
+      39% { opacity: 1; color: #8ec0ff; text-shadow: 0 0 12px rgba(140,192,255,0.7); }
+      43% { color: inherit; text-shadow: none; }
+      90% { opacity: 1; }
+      95%, 100% { opacity: 0; }
+    }
+    /* AMOUNT_NET  — t=4.0s = 40% */
+    .v1-skel-amountnet { animation: v1Shimmer 1.6s linear infinite, v1SkelAmountNet 10s linear infinite; }
+    .v1-fill-amountnet { animation: v1FillAmountNet 10s linear infinite; opacity: 0; }
+    @keyframes v1SkelAmountNet { 0%, 39% { opacity: 1; } 40%, 90% { opacity: 0; } 95%, 100% { opacity: 1; } }
+    @keyframes v1FillAmountNet {
+      0%, 39% { opacity: 0; }
+      40% { opacity: 1; color: #8ec0ff; text-shadow: 0 0 12px rgba(140,192,255,0.7); }
+      44% { color: inherit; text-shadow: none; }
+      90% { opacity: 1; }
+      95%, 100% { opacity: 0; }
+    }
+    /* AMOUNT_GROSS  — t=4.1s = 41% */
+    .v1-skel-amountgross { animation: v1Shimmer 1.6s linear infinite, v1SkelAmountGross 10s linear infinite; }
+    .v1-fill-amountgross { animation: v1FillAmountGross 10s linear infinite; opacity: 0; }
+    @keyframes v1SkelAmountGross { 0%, 40% { opacity: 1; } 41%, 90% { opacity: 0; } 95%, 100% { opacity: 1; } }
+    @keyframes v1FillAmountGross {
+      0%, 40% { opacity: 0; }
+      41% { opacity: 1; color: #8ec0ff; text-shadow: 0 0 12px rgba(140,192,255,0.7); }
+      45% { color: inherit; text-shadow: none; }
+      90% { opacity: 1; }
+      95%, 100% { opacity: 0; }
+    }
+    /* STATUS — t=4.2s = 42% (climactic green glow) */
+    .v1-fill-status { animation: v1FillStatus 10s ease-out infinite; opacity: 0; transform-origin: left center; }
+    @keyframes v1FillStatus {
+      0%, 41% { opacity: 0; transform: scale(0.96); }
+      42% { opacity: 1; transform: scale(1.06); color: #34d399; text-shadow: 0 0 18px rgba(52,211,153,0.85); }
+      46% { transform: scale(1); text-shadow: 0 0 8px rgba(52,211,153,0.45); }
+      90% { opacity: 1; transform: scale(1); }
+      95%, 100% { opacity: 0; transform: scale(0.96); }
+    }
+    /* CONFIDENCE — t=4.2s = 42% (lands together with STATUS) */
+    .v1-confidence { animation: v1FillConfidence 10s linear infinite; opacity: 0; }
+    @keyframes v1FillConfidence {
+      0%, 41% { opacity: 0; transform: translateY(6px); }
+      42% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; transform: translateY(0); }
+      95%, 100% { opacity: 0; transform: translateY(0); }
     }
 
     /* Skip to main content (a11y) */
@@ -431,117 +576,103 @@
           </p>
         </div>
 
-        <!-- Animation stage -->
+        <!-- Animation stage — V1 Pipe & Packet -->
         <div class="proto01-stage relative rounded-2xl border hairline bg-ink-1 overflow-hidden">
           <div class="absolute inset-0 bg-lattice opacity-60 pointer-events-none"></div>
           <div class="absolute inset-0 bg-navy-glow opacity-60 pointer-events-none"></div>
 
-          <div class="absolute top-5 left-6 font-mono text-[10px] tracking-widest text-gray-400 uppercase">Inbound · 14:32:<span id="hero-seconds" data-from="0" data-to="7">07</span></div>
-          <div class="absolute top-5 right-6 font-mono text-[10px] tracking-widest text-gray-400 uppercase">Pipeline · invoices</div>
+          <!-- Animated layer (fades in/out together at loop boundaries) -->
+          <div class="relative grid md:grid-cols-12 gap-10 px-6 md:px-14 py-16 v1-stage-loop">
 
-          <div class="relative grid md:grid-cols-12 gap-10 px-6 md:px-14 py-16">
+            <!-- LEFT: Invoice column -->
+            <div class="md:col-span-7 relative">
+              <!-- Invoice wrapper sized exactly like the invoice card; gives the confidence badge a corner to anchor to -->
+              <div class="relative w-full max-w-[480px] mx-auto md:mx-0">
 
-            <!-- LEFT: Invoice mockup -->
-            <div class="md:col-span-7 relative proto01-loop">
-              <div class="relative bg-white text-slate-900 rounded-lg shadow-[0_30px_80px_-20px_rgba(0,31,84,0.7)] ring-1 ring-white/10 w-full max-w-[480px] mx-auto md:mx-0 overflow-hidden">
-                <div class="px-7 pt-7 pb-5 border-b border-slate-200">
-                  <div class="flex items-start justify-between">
-                    <div>
-                      <div class="text-[10px] font-mono tracking-widest text-slate-400 uppercase mb-1">Rechnung</div>
-                      <div class="text-[13px] font-semibold text-slate-900 relative inline-block">
-                        Muster Stahltechnik GmbH
-                        <span class="marker-underline delay-1" style="left:-6px;right:-6px;top:-4px;bottom:-4px;height:auto;"></span>
+                <!-- Invoice card -->
+                <div class="bg-white text-slate-900 rounded-lg shadow-[0_30px_80px_-20px_rgba(0,31,84,0.7)] ring-1 ring-white/10 overflow-hidden">
+                  <div class="px-7 pt-7 pb-5 border-b border-slate-200">
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <div class="text-[10px] font-mono tracking-widest text-slate-400 uppercase mb-1">Rechnung</div>
+                        <div class="text-[13px] font-semibold text-slate-900 relative inline-block">
+                          Muster Stahltechnik GmbH
+                          <span class="marker-underline v1-marker-s1" style="left:-6px;right:-6px;top:-4px;bottom:-4px;height:auto;"></span>
+                        </div>
+                        <div class="text-[11px] text-slate-500 mt-0.5">Industriestraße 14 · 4020 Linz · Österreich</div>
                       </div>
-                      <div class="text-[11px] text-slate-500 mt-0.5">Industriestraße 14 · 4020 Linz · Österreich</div>
-                    </div>
-                    <div class="text-right">
-                      <div class="text-[10px] font-mono text-slate-400">R-2025-08812</div>
-                      <div class="text-[10px] font-mono text-slate-400 mt-0.5">18.04.2026</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="px-7 py-5 grid grid-cols-2 gap-3 text-[11px]">
-                  <div class="relative">
-                    <div class="text-slate-400 mb-0.5">UID-Nr.</div>
-                    <div class="font-mono font-medium text-slate-900 relative inline-block">
-                      ATU45678901
-                      <span class="marker-underline marker-green delay-2" style="left:-4px;right:-4px;top:-3px;bottom:-3px;height:auto;"></span>
+                      <div class="text-right">
+                        <div class="text-[10px] font-mono text-slate-400">R-2025-08812</div>
+                        <div class="text-[10px] font-mono text-slate-400 mt-0.5">18.04.2026</div>
+                      </div>
                     </div>
                   </div>
-                  <div class="relative">
-                    <div class="text-slate-400 mb-0.5">Ihre Bestell-Nr.</div>
-                    <div class="font-mono font-medium text-slate-900 relative inline-block">
-                      205380
-                      <span class="marker-underline marker-green delay-3" style="left:-4px;right:-4px;top:-3px;bottom:-3px;height:auto;"></span>
+                  <div class="px-7 py-5 grid grid-cols-2 gap-3 text-[11px]">
+                    <div class="relative">
+                      <div class="text-slate-400 mb-0.5">UID-Nr.</div>
+                      <div class="font-mono font-medium text-slate-900 relative inline-block">
+                        ATU45678901
+                        <span class="marker-underline marker-green v1-marker-s1" style="left:-4px;right:-4px;top:-3px;bottom:-3px;height:auto;"></span>
+                      </div>
+                    </div>
+                    <div class="relative">
+                      <div class="text-slate-400 mb-0.5">Ihre Bestell-Nr.</div>
+                      <div class="font-mono font-medium text-slate-900 relative inline-block">
+                        205380
+                        <span class="marker-underline marker-green v1-marker-s2" style="left:-4px;right:-4px;top:-3px;bottom:-3px;height:auto;"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="px-7 pb-4">
+                    <div class="border-t border-slate-200 pt-3 space-y-1.5 text-[11px]">
+                      <div class="flex justify-between text-slate-600"><span>Drehteile Serie 2000</span><span class="font-mono">1.560,00</span></div>
+                      <div class="flex justify-between text-slate-600"><span>Stahlplatten 3mm</span><span class="font-mono">980,00</span></div>
+                      <div class="flex justify-between text-slate-600"><span>Bearbeitung &amp; Montage</span><span class="font-mono">1.028,00</span></div>
+                    </div>
+                  </div>
+                  <div class="px-7 pb-6 text-[11px] border-t border-slate-200 pt-3">
+                    <div class="flex justify-between text-slate-500"><span>Zwischensumme</span><span class="font-mono">3.568,00 €</span></div>
+                    <div class="flex justify-between text-slate-500"><span>USt. 20%</span><span class="font-mono">713,60 €</span></div>
+                    <div class="flex justify-between text-slate-900 font-semibold mt-1.5 relative">
+                      <span>Gesamt</span>
+                      <span class="font-mono relative inline-block">
+                        4.281,60 €
+                        <span class="marker-underline v1-marker-s2" style="left:-4px;right:-4px;top:-3px;bottom:-3px;height:auto;"></span>
+                      </span>
                     </div>
                   </div>
                 </div>
-                <div class="px-7 pb-4">
-                  <div class="border-t border-slate-200 pt-3 space-y-1.5 text-[11px]">
-                    <div class="flex justify-between text-slate-600"><span>Drehteile Serie 2000</span><span class="font-mono">1.560,00</span></div>
-                    <div class="flex justify-between text-slate-600"><span>Stahlplatten 3mm</span><span class="font-mono">980,00</span></div>
-                    <div class="flex justify-between text-slate-600"><span>Bearbeitung &amp; Montage</span><span class="font-mono">1.028,00</span></div>
-                  </div>
-                </div>
-                <div class="px-7 pb-6 text-[11px] border-t border-slate-200 pt-3">
-                  <div class="flex justify-between text-slate-500"><span>Zwischensumme</span><span class="font-mono">3.568,00 €</span></div>
-                  <div class="flex justify-between text-slate-500"><span>USt. 20%</span><span class="font-mono">713,60 €</span></div>
-                  <div class="flex justify-between text-slate-900 font-semibold mt-1.5 relative">
-                    <span>Gesamt</span>
-                    <span class="font-mono relative inline-block">
-                      4.281,60 €
-                      <span class="marker-underline delay-4" style="left:-4px;right:-4px;top:-3px;bottom:-3px;height:auto;"></span>
-                    </span>
-                  </div>
-                </div>
-              </div>
 
-              <!-- Confidence badge -->
-              <div class="hidden md:flex stage-appear delay-5 badge-float absolute -right-4 top-6 z-10 items-center gap-2 px-3 py-1.5 rounded-full bg-ink-3/90 backdrop-blur border border-ice-500/30 text-[11px]">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span class="font-mono text-ice-300">98.7% extraction confidence</span>
-              </div>
-
-              <!-- Floating extraction cards -->
-              <div class="stage-appear delay-1 absolute -left-6 md:-left-10 top-16 hidden md:block">
-                <div class="px-3 py-2 rounded-md bg-ink-3/90 backdrop-blur border border-white/10 text-[11px] min-w-[180px] shadow-xl shadow-black/40">
-                  <div class="flex items-center gap-2">
-                    <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0 check-pulse" style="animation-delay:1.8s" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    <span class="text-gray-400 font-mono text-[10px] uppercase tracking-wider">Lieferant</span>
-                  </div>
-                  <div class="mt-1 text-white">Muster Stahltechnik GmbH</div>
+                <!-- Confidence badge — anchored to invoice card's top-right corner -->
+                <div class="hidden md:flex v1-confidence absolute z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-ink-3/95 backdrop-blur border border-ice-500/30 text-[11px] shadow-lg shadow-black/40" style="top:-14px;right:-12px">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  <span class="font-mono text-ice-300">98.7% extraction confidence</span>
                 </div>
-              </div>
 
-              <div class="stage-appear delay-2 absolute -left-6 md:-left-14 top-[140px] hidden md:block">
-                <div class="px-3 py-2 rounded-md bg-ink-3/90 backdrop-blur border border-emerald-500/20 text-[11px] min-w-[200px] shadow-xl shadow-black/40">
-                  <div class="flex items-center gap-2">
-                    <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0 check-pulse" style="animation-delay:3.2s" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    <span class="text-gray-400 font-mono text-[10px] uppercase tracking-wider">UID validiert</span>
+                <!-- Combined chip 1: Lieferant + UID validiert (step 1) -->
+                <div class="v1-chip-s1 hidden md:block absolute z-10" style="top:64px;left:-44px">
+                  <div class="px-3 py-2.5 rounded-md bg-ink-3/90 backdrop-blur border border-emerald-500/30 text-[11px] min-w-[210px] shadow-xl shadow-black/40 space-y-1">
+                    <div class="flex items-center gap-2">
+                      <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                      <span class="text-gray-400 font-mono text-[10px] uppercase tracking-wider">Lieferant + UID validiert</span>
+                    </div>
+                    <div class="text-white">Muster Stahltechnik GmbH</div>
+                    <div class="font-mono text-[10px] text-gray-300">ATU45678901 <span class="text-emerald-400">· EU VIES ✓</span></div>
                   </div>
-                  <div class="mt-1 text-white font-mono">ATU45678901 <span class="text-emerald-400">✓ EU VIES</span></div>
                 </div>
-              </div>
 
-              <div class="stage-appear delay-3 absolute right-0 md:-right-4 top-[150px] hidden md:block">
-                <div class="px-3 py-2 rounded-md bg-ink-3/90 backdrop-blur border border-ice-500/25 text-[11px] min-w-[220px] shadow-xl shadow-black/40">
-                  <div class="flex items-center gap-2">
-                    <svg class="w-3.5 h-3.5 text-ice-400 shrink-0 check-pulse" style="animation-delay:4.6s" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
-                    <span class="text-gray-400 font-mono text-[10px] uppercase tracking-wider">Bestellung gefunden</span>
+                <!-- Combined chip 2: Bestellung + Betrag (step 2) -->
+                <div class="v1-chip-s2 hidden md:block absolute z-10" style="bottom:60px;right:-32px">
+                  <div class="px-3 py-2.5 rounded-md bg-ink-3/90 backdrop-blur border border-ice-500/30 text-[11px] min-w-[220px] shadow-xl shadow-black/40 space-y-1">
+                    <div class="flex items-center gap-2">
+                      <svg class="w-3.5 h-3.5 text-ice-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+                      <span class="text-gray-400 font-mono text-[10px] uppercase tracking-wider">Bestellung + Betrag abgeglichen</span>
+                    </div>
+                    <div class="text-white">PEKK <span class="font-mono text-ice-300">205380</span></div>
+                    <div class="font-mono text-[10px] text-gray-300">4.281,60 € <span class="text-emerald-400">· Match ✓</span></div>
                   </div>
-                  <div class="mt-1 text-white">PEKK <span class="font-mono text-ice-300">205380</span></div>
-                  <div class="text-gray-400 text-[10px] mt-0.5">Muster Stahltechnik GmbH · 3 Positionen</div>
                 </div>
-              </div>
 
-              <div class="stage-appear delay-4 absolute -right-2 md:right-2 bottom-8 hidden md:block">
-                <div class="px-3 py-2 rounded-md bg-ink-3/90 backdrop-blur border border-white/10 text-[11px] min-w-[160px] shadow-xl shadow-black/40">
-                  <div class="flex items-center gap-2">
-                    <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0 check-pulse" style="animation-delay:6s" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    <span class="text-gray-400 font-mono text-[10px] uppercase tracking-wider">Betrag abgeglichen</span>
-                  </div>
-                  <div class="mt-1 text-white font-mono">4.281,60 €</div>
-                </div>
               </div>
             </div>
 
@@ -552,21 +683,28 @@
               <span class="h-px flex-1 bg-white/10" aria-hidden="true"></span>
             </div>
 
-            <!-- Connecting line -->
-            <svg class="connect-line absolute left-0 top-0 w-full h-full pointer-events-none hidden md:block" viewBox="0 0 1200 620" preserveAspectRatio="none" aria-hidden="true">
+            <!-- Connecting line — bright enough to read end-to-end during hold -->
+            <svg class="v1-line absolute left-0 top-0 w-full h-full pointer-events-none hidden md:block" viewBox="0 0 1200 620" preserveAspectRatio="none" aria-hidden="true">
               <defs>
-                <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#3478ff" stop-opacity="0"/>
-                  <stop offset="30%" stop-color="#3478ff" stop-opacity="0.9"/>
-                  <stop offset="100%" stop-color="#5b8eff" stop-opacity="0.9"/>
+                <linearGradient id="v1LineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#5b8eff" stop-opacity="0.6"/>
+                  <stop offset="20%" stop-color="#5b8eff" stop-opacity="1"/>
+                  <stop offset="100%" stop-color="#8ec0ff" stop-opacity="1"/>
                 </linearGradient>
               </defs>
-              <path d="M 620 340 C 720 340, 780 340, 870 340" stroke="url(#lineGrad)" stroke-width="1.5" fill="none"/>
-              <circle cx="870" cy="340" r="3" fill="#5b8eff"/>
+              <path d="M 523 340 C 580 340, 660 340, 713 340" stroke="url(#v1LineGrad)" stroke-width="2" fill="none"/>
             </svg>
 
-            <!-- RIGHT: PSI Penta record -->
-            <div class="md:col-span-5 relative stage-appear delay-6 flex items-center">
+            <!-- 2 packets — one per extraction step -->
+            <div class="absolute hidden md:block" style="left:51.5%;top:54%;pointer-events:none">
+              <div class="v1-packet-1 v1-packet-dot"></div>
+            </div>
+            <div class="absolute hidden md:block" style="left:51.5%;top:54%;pointer-events:none">
+              <div class="v1-packet-2 v1-packet-dot"></div>
+            </div>
+
+            <!-- RIGHT: PSI Penta record (skeletons from t=0; SUPPLIER + UID first) -->
+            <div class="md:col-span-5 relative flex items-center">
               <div class="w-full rounded-xl border border-ice-500/20 bg-gradient-to-b from-ink-3 to-ink-2 shadow-[0_20px_60px_-15px_rgba(52,120,255,0.25)] overflow-hidden">
                 <div class="px-5 py-3 border-b border-white/5 flex items-center justify-between">
                   <div class="flex items-center gap-2">
@@ -582,15 +720,54 @@
                   </div>
                 </div>
                 <div class="px-5 py-4 space-y-2.5 font-mono text-[11px]">
-                  <div class="flex justify-between"><span class="text-gray-400">RECORD</span><span class="text-white">PREK · 880012</span></div>
-                  <div class="flex justify-between"><span class="text-gray-400">ORDER_REF</span><span class="text-ice-300">205380</span></div>
-                  <div class="flex justify-between"><span class="text-gray-400">SUPPLIER</span><span class="text-white">Muster Stahltechnik GmbH</span></div>
-                  <div class="flex justify-between"><span class="text-gray-400">UID</span><span class="text-white">ATU45678901</span></div>
-                  <div class="flex justify-between"><span class="text-gray-400">AMOUNT_NET</span><span class="text-white">3.568,00</span></div>
-                  <div class="flex justify-between"><span class="text-gray-400">AMOUNT_GROSS</span><span class="text-white">4.281,60</span></div>
+                  <!-- Step 1 fills: SUPPLIER, UID (top of card) -->
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-400">SUPPLIER</span>
+                    <span class="relative">
+                      <span class="v1-skel-bg v1-skel-supplier" style="width:160px"></span>
+                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-white v1-fill-supplier">Muster Stahltechnik GmbH</span>
+                    </span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-400">UID</span>
+                    <span class="relative">
+                      <span class="v1-skel-bg v1-skel-uid" style="width:100px"></span>
+                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-white v1-fill-uid">ATU45678901</span>
+                    </span>
+                  </div>
+                  <!-- Step 2 cascade: RECORD → ORDER_REF → AMOUNT_NET → AMOUNT_GROSS -->
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-400">RECORD</span>
+                    <span class="relative">
+                      <span class="v1-skel-bg v1-skel-record" style="width:90px"></span>
+                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-white v1-fill-record">PREK · 880012</span>
+                    </span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-400">ORDER_REF</span>
+                    <span class="relative">
+                      <span class="v1-skel-bg v1-skel-orderref" style="width:60px"></span>
+                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-ice-300 v1-fill-orderref">205380</span>
+                    </span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-400">AMOUNT_NET</span>
+                    <span class="relative">
+                      <span class="v1-skel-bg v1-skel-amountnet" style="width:80px"></span>
+                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-white v1-fill-amountnet">3.568,00</span>
+                    </span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-400">AMOUNT_GROSS</span>
+                    <span class="relative">
+                      <span class="v1-skel-bg v1-skel-amountgross" style="width:80px"></span>
+                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-white v1-fill-amountgross">4.281,60</span>
+                    </span>
+                  </div>
+                  <!-- Final reveal: STATUS (no skeleton — empty until climax) -->
                   <div class="flex justify-between pt-2 border-t border-white/5">
                     <span class="text-gray-400">STATUS</span>
-                    <span class="text-emerald-400 flex items-center gap-1.5">
+                    <span class="v1-fill-status flex items-center gap-1.5">
                       <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                       Automatisch gebucht
                     </span>
@@ -1217,24 +1394,6 @@
       reveals.forEach(el => io.observe(el));
     }
 
-    // Hero seconds counter — runs once on first reveal, does not loop
-    const seconds = document.getElementById('hero-seconds');
-    if (seconds && 'IntersectionObserver' in window) {
-      const from = +seconds.dataset.from, to = +seconds.dataset.to;
-      const pad = n => String(n).padStart(2, '0');
-      seconds.textContent = pad(from);
-      const tick = new IntersectionObserver((entries, obs) => {
-        if (!entries[0].isIntersecting) return;
-        obs.disconnect();
-        let n = from;
-        const step = () => {
-          seconds.textContent = pad(n);
-          if (n < to) { n++; setTimeout(step, 180); }
-        };
-        step();
-      }, { threshold: 0.4 });
-      tick.observe(seconds);
-    }
   </script>
 </body>
 </html>
