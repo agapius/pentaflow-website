@@ -626,9 +626,12 @@
           <a href="#kontakt" class="ml-1 px-2.5 py-1.5 rounded border border-ice-500/40 bg-ice-500/10 text-ice-200 hover:bg-ice-500/20 hover:text-white transition-colors">Kontakt</a>
         </div>
         <!-- Mobile Menu Button -->
-        <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-400 hover:text-white" aria-label="Menü öffnen">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <button id="mobile-menu-btn" class="md:hidden w-11 h-11 flex items-center justify-center text-gray-400 hover:text-white" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
+          <svg id="mobile-menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg id="mobile-menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 6l12 12M6 18L18 6"/>
           </svg>
         </button>
       </div>
@@ -636,10 +639,10 @@
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden md:hidden border-t hairline bg-ink-0/95 nav-blur">
       <div class="px-4 py-4 space-y-2 text-[11px] font-mono">
-        <a href="#kundenstimme" class="block px-3 py-2 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Kundenstimme</a>
-        <a href="#prozess" class="block px-3 py-2 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Prozess</a>
-        <a href="#ueber-uns" class="block px-3 py-2 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Über uns</a>
-        <a href="#kontakt" class="block px-3 py-2 rounded border border-ice-500/40 bg-ice-500/10 text-ice-200 hover:bg-ice-500/20 hover:text-white transition-colors">Kontakt →</a>
+        <a href="#kundenstimme" class="block px-3 py-3.5 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Kundenstimme</a>
+        <a href="#prozess" class="block px-3 py-3.5 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Prozess</a>
+        <a href="#ueber-uns" class="block px-3 py-3.5 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Über uns</a>
+        <a href="#kontakt" class="block px-3 py-3.5 rounded border border-ice-500/40 bg-ice-500/10 text-ice-200 hover:bg-ice-500/20 hover:text-white transition-colors">Kontakt →</a>
       </div>
     </div>
   </nav>
@@ -681,7 +684,7 @@
                   <div class="px-7 pt-7 pb-5 border-b border-slate-200">
                     <div class="flex items-start justify-between">
                       <div>
-                        <div class="text-[10px] font-mono tracking-widest text-slate-400 uppercase mb-1">Rechnung</div>
+                        <div class="text-[11px] md:text-[10px] font-mono tracking-widest text-slate-400 uppercase mb-1">Rechnung</div>
                         <!-- Mobile-short variant (tighter marker for single-line fit) -->
                         <div class="md:hidden text-[13px] font-semibold text-slate-900 relative inline-block">
                           Stahltechnik GmbH
@@ -695,8 +698,8 @@
                         <div class="text-[11px] text-slate-500 mt-0.5">Industriestraße 14 · 4020 Linz · Österreich</div>
                       </div>
                       <div class="text-right">
-                        <div class="text-[10px] font-mono text-slate-400"><span class="md:hidden">R-25-2</span><span class="hidden md:inline">R-2025-08812</span></div>
-                        <div class="text-[10px] font-mono text-slate-400 mt-0.5">18.04.2026</div>
+                        <div class="text-[11px] md:text-[10px] font-mono text-slate-400"><span class="md:hidden">R-25-2</span><span class="hidden md:inline">R-2025-08812</span></div>
+                        <div class="text-[11px] md:text-[10px] font-mono text-slate-400 mt-0.5">18.04.2026</div>
                       </div>
                     </div>
                   </div>
@@ -747,10 +750,10 @@
                   <div class="px-3 py-2.5 rounded-md bg-ink-3/90 backdrop-blur border border-emerald-500/30 text-[11px] min-w-[210px] shadow-xl shadow-black/40 space-y-1">
                     <div class="flex items-center gap-2">
                       <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                      <span class="text-gray-400 font-mono text-[10px] uppercase tracking-wider">Lieferant + UID validiert</span>
+                      <span class="text-gray-400 font-mono text-[11px] md:text-[10px] uppercase tracking-wider">Lieferant + UID validiert</span>
                     </div>
                     <div class="text-white">Muster Stahltechnik GmbH</div>
-                    <div class="font-mono text-[10px] text-gray-300">ATU45678901 <span class="text-emerald-400">· EU VIES ✓</span></div>
+                    <div class="font-mono text-[11px] md:text-[10px] text-gray-300">ATU45678901 <span class="text-emerald-400">· EU VIES ✓</span></div>
                   </div>
                 </div>
 
@@ -759,10 +762,10 @@
                   <div class="px-3 py-2.5 rounded-md bg-ink-3/90 backdrop-blur border border-ice-500/30 text-[11px] min-w-[220px] shadow-xl shadow-black/40 space-y-1">
                     <div class="flex items-center gap-2">
                       <svg class="w-3.5 h-3.5 text-ice-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
-                      <span class="text-gray-400 font-mono text-[10px] uppercase tracking-wider">Bestellung + Betrag abgeglichen</span>
+                      <span class="text-gray-400 font-mono text-[11px] md:text-[10px] uppercase tracking-wider">Bestellung + Betrag abgeglichen</span>
                     </div>
                     <div class="text-white">PEKK <span class="font-mono text-ice-300">205380</span></div>
-                    <div class="font-mono text-[10px] text-gray-300">4.281,60 € <span class="text-emerald-400">· Match ✓</span></div>
+                    <div class="font-mono text-[11px] md:text-[10px] text-gray-300">4.281,60 € <span class="text-emerald-400">· Match ✓</span></div>
                   </div>
                 </div>
 
@@ -779,26 +782,26 @@
               <div class="relative w-full max-w-[300px]" style="height:58px">
                 <!-- Phase 1: reading invoice -->
                 <div class="bridge-phase bridge-phase-1 absolute inset-0 flex flex-col items-center justify-center gap-1">
-                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-ice-500/25 text-[10px] shadow-xl shadow-black/40">
+                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-ice-500/25 text-[11px] md:text-[10px] shadow-xl shadow-black/40">
                     <span class="w-1.5 h-1.5 rounded-full bg-ice-400 animate-pulse"></span>
                     <span class="font-mono uppercase tracking-wider text-ice-300">Rechnung wird gelesen</span>
                   </div>
                 </div>
                 <!-- Phase 2a: supplier + UID validated -->
                 <div class="bridge-phase bridge-phase-2a absolute inset-0 flex flex-col items-center justify-center gap-1">
-                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-emerald-500/30 text-[10px] shadow-xl shadow-black/40">
+                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-emerald-500/30 text-[11px] md:text-[10px] shadow-xl shadow-black/40">
                     <svg class="w-3 h-3 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     <span class="font-mono uppercase tracking-wider text-gray-300">Lieferant + UID validiert</span>
                   </div>
-                  <div class="font-mono text-[9px] text-gray-400">ATU45678901 <span class="text-emerald-400">· EU VIES ✓</span></div>
+                  <div class="font-mono text-[11px] md:text-[9px] text-gray-400">ATU45678901 <span class="text-emerald-400">· EU VIES ✓</span></div>
                 </div>
                 <!-- Phase 2b: Bestellung + Betrag -->
                 <div class="bridge-phase bridge-phase-2b absolute inset-0 flex flex-col items-center justify-center gap-1">
-                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-ice-500/30 text-[10px] shadow-xl shadow-black/40">
+                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-ice-500/30 text-[11px] md:text-[10px] shadow-xl shadow-black/40">
                     <svg class="w-3 h-3 text-ice-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2"/></svg>
                     <span class="font-mono uppercase tracking-wider text-gray-300">Bestellung + Betrag · Match</span>
                   </div>
-                  <div class="font-mono text-[9px] text-gray-400">PEKK 205380 · 4.281,60 € <span class="text-emerald-400">✓</span></div>
+                  <div class="font-mono text-[11px] md:text-[9px] text-gray-400">PEKK 205380 · 4.281,60 € <span class="text-emerald-400">✓</span></div>
                 </div>
                 <!-- Phase 3: climactic — written + confidence -->
                 <div class="bridge-phase bridge-phase-3 absolute inset-0 flex flex-col items-center justify-center gap-1.5">
@@ -806,7 +809,7 @@
                     <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     <span class="font-mono uppercase tracking-wider text-emerald-300">In PSI&nbsp;Penta geschrieben</span>
                   </div>
-                  <div class="flex items-center gap-2 font-mono text-[10px]">
+                  <div class="flex items-center gap-2 font-mono text-[11px] md:text-[10px]">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                     <span class="text-ice-300">98.7% extraction confidence</span>
                   </div>
@@ -845,11 +848,11 @@
                       <svg class="w-3.5 h-3.5 text-ice-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 1.1.9 2 2 2h12a2 2 0 002-2V7M4 7l8-4 8 4M4 7l8 4 8-4"/></svg>
                     </div>
                     <div class="text-xs font-semibold text-white">PSI Penta</div>
-                    <span class="font-mono text-[10px] text-gray-400">PREK / newRecord</span>
+                    <span class="font-mono text-[11px] md:text-[10px] text-gray-400">PREK / newRecord</span>
                   </div>
                   <div class="flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span class="font-mono text-[10px] text-emerald-400">LIVE</span>
+                    <span class="font-mono text-[11px] md:text-[10px] text-emerald-400">LIVE</span>
                   </div>
                 </div>
                 <div class="px-5 py-4 space-y-2.5 font-mono text-[11px]">
@@ -944,14 +947,14 @@
               <div class="relative h-full flex items-center justify-center">
                 <div class="rounded-lg bg-ink-3 border border-white/10 shadow-2xl shadow-black/50 px-4 py-3 w-[78%]">
                   <div class="flex items-center justify-between mb-3">
-                    <div class="text-[10px] font-mono uppercase tracking-widest text-gray-400">agent.config</div>
+                    <div class="text-[11px] md:text-[10px] font-mono uppercase tracking-widest text-gray-400">agent.config</div>
                     <div class="flex gap-1">
                       <span class="w-1.5 h-1.5 rounded-full bg-gray-700"></span>
                       <span class="w-1.5 h-1.5 rounded-full bg-gray-700"></span>
                       <span class="w-1.5 h-1.5 rounded-full bg-ice-500"></span>
                     </div>
                   </div>
-                  <div class="space-y-1.5 font-mono text-[10px]">
+                  <div class="space-y-1.5 font-mono text-[11px] md:text-[10px]">
                     <div class="flex justify-between"><span class="text-gray-400">pipeline</span><span class="text-ice-300">invoices</span></div>
                     <div class="flex justify-between"><span class="text-gray-400">vendor_rules</span><span class="text-white">24</span></div>
                     <div class="flex justify-between"><span class="text-gray-400">erp_target</span><span class="text-white">psi_penta</span></div>
@@ -961,7 +964,7 @@
               </div>
             </div>
             <div class="p-6">
-              <div class="font-mono text-[10px] uppercase tracking-widest text-ice-400 mb-3">01 · Maßgeschneidert</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-ice-400 mb-3">01 · Maßgeschneidert</div>
               <h3 class="font-display text-xl font-semibold text-white mb-3">Nicht Standard.<br>Für Sie gebaut.</h3>
               <p class="text-sm text-gray-400 leading-relaxed">
                 Kein Produkt von der Stange. Jeder Agent wird auf Ihre Dokumente, Lieferanten und Ihre PSI-Penta-Konfiguration zugeschnitten. Vier Wochen bis zum Produktivbetrieb.
@@ -976,13 +979,13 @@
               <div class="relative h-full flex items-center justify-center p-6">
                 <div class="rounded-lg bg-ink-3 border border-white/10 shadow-2xl shadow-black/50 px-4 py-3 w-full">
                   <div class="flex items-center justify-between mb-3">
-                    <div class="text-[10px] font-mono uppercase tracking-widest text-gray-400">data.location</div>
-                    <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[9px] font-mono">
+                    <div class="text-[11px] md:text-[10px] font-mono uppercase tracking-widest text-gray-400">data.location</div>
+                    <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[11px] md:text-[9px] font-mono">
                       <span class="w-1 h-1 rounded-full bg-emerald-400"></span>
                       EU
                     </div>
                   </div>
-                  <div class="space-y-1.5 font-mono text-[10px]">
+                  <div class="space-y-1.5 font-mono text-[11px] md:text-[10px]">
                     <div class="flex items-center gap-1.5">
                       <svg class="w-3 h-3 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                       <span class="text-gray-300">EU-hosted</span>
@@ -1004,7 +1007,7 @@
               </div>
             </div>
             <div class="p-6">
-              <div class="font-mono text-[10px] uppercase tracking-widest text-ice-400 mb-3">02 · Datenschutz</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-ice-400 mb-3">02 · Datenschutz</div>
               <h3 class="font-display text-xl font-semibold text-white mb-3">Sie behalten<br>die Datenhoheit.</h3>
               <p class="text-sm text-gray-400 leading-relaxed">
                 Ihre Daten bleiben bei Ihnen. Hosting in der EU — on-prem oder Managed, Sie entscheiden. Nichts geht an Dritte. Nichts wird für Modelltraining verwendet.
@@ -1018,22 +1021,22 @@
               <div class="absolute inset-0 bg-lattice opacity-50"></div>
               <div class="relative h-full flex items-center justify-center p-6">
                 <div class="rounded-lg bg-ink-3 border border-white/10 shadow-2xl shadow-black/50 w-full divide-y divide-white/5">
-                  <div class="flex items-center gap-2 px-3 py-2 text-[10px]">
+                  <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px]">
                     <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     <span class="text-gray-400 font-mono truncate">205380 · Muster GmbH</span>
                     <span class="ml-auto text-emerald-400 font-mono">gebucht</span>
                   </div>
-                  <div class="flex items-center gap-2 px-3 py-2 text-[10px]">
+                  <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px]">
                     <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     <span class="text-gray-400 font-mono truncate">205381 · Schmidt KG</span>
                     <span class="ml-auto text-emerald-400 font-mono">gebucht</span>
                   </div>
-                  <div class="flex items-center gap-2 px-3 py-2 text-[10px] bg-amber-500/5">
+                  <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px] bg-amber-500/5">
                     <svg class="w-3 h-3 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
                     <span class="text-white font-mono truncate">205382 · Prüfung</span>
                     <span class="ml-auto text-amber-400 font-mono">±0,40 €</span>
                   </div>
-                  <div class="flex items-center gap-2 px-3 py-2 text-[10px]">
+                  <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px]">
                     <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     <span class="text-gray-400 font-mono truncate">205383 · Huber AG</span>
                     <span class="ml-auto text-emerald-400 font-mono">gebucht</span>
@@ -1042,7 +1045,7 @@
               </div>
             </div>
             <div class="p-6">
-              <div class="font-mono text-[10px] uppercase tracking-widest text-ice-400 mb-3">03 · Human-in-the-Loop</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-ice-400 mb-3">03 · Human-in-the-Loop</div>
               <h3 class="font-display text-xl font-semibold text-white mb-3">Autonom.<br>Aber nie ohne Sie.</h3>
               <p class="text-sm text-gray-400 leading-relaxed">
                 Der Agent bucht nur, wenn alles stimmt. Preisabweichungen, fehlende Zuordnungen, ungewöhnliche UIDs landen automatisch in Ihrem Prüfpostfach. Die letzte Entscheidung bleibt Ihre.
@@ -1078,7 +1081,7 @@
               <span class="text-gray-400 ml-1">→&nbsp;PEKK&nbsp;/&nbsp;PEKP</span>
             </span>
           </div>
-          <span class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Zwei Pipelines · beide live bei Seisenbacher</span>
+          <span class="text-[11px] md:text-[10px] font-mono uppercase tracking-widest text-gray-400">Zwei Pipelines · beide live bei Seisenbacher</span>
         </div>
 
         <figure class="relative max-w-5xl mx-auto rounded-2xl border hairline-strong overflow-hidden bg-ink-2">
@@ -1100,20 +1103,20 @@
                 <div class="mt-4 pt-4 border-t hairline">
                   <div class="font-display font-bold text-white text-sm tracking-[0.18em]">SEISENBACHER</div>
                   <div class="text-[11px] text-gray-400 mt-1">Schienenfahrzeugausstattung</div>
-                  <div class="font-mono text-[10px] uppercase tracking-widest text-gray-400 mt-1">Österreich</div>
+                  <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-1">Österreich</div>
                 </div>
               </div>
               <div class="pt-4 border-t hairline space-y-2 font-mono text-[11px]">
                 <div class="flex items-center justify-between">
-                  <span class="text-gray-400 uppercase tracking-widest text-[10px]">Rechnungen/Mt.</span>
+                  <span class="text-gray-400 uppercase tracking-widest text-[11px] md:text-[10px]">Rechnungen/Mt.</span>
                   <span class="text-white">1.700+</span>
                 </div>
                 <div class="flex items-center justify-between">
-                  <span class="text-gray-400 uppercase tracking-widest text-[10px]">Bestellbest./Mt.</span>
+                  <span class="text-gray-400 uppercase tracking-widest text-[11px] md:text-[10px]">Bestellbest./Mt.</span>
                   <span class="text-white">1.500+</span>
                 </div>
                 <div class="flex items-center justify-between">
-                  <span class="text-gray-400 uppercase tracking-widest text-[10px]">Live seit</span>
+                  <span class="text-gray-400 uppercase tracking-widest text-[11px] md:text-[10px]">Live seit</span>
                   <span class="text-emerald-400 flex items-center gap-1.5">
                     <span class="w-1 h-1 rounded-full bg-emerald-400 animate-pulse"></span>2025
                   </span>
@@ -1146,17 +1149,17 @@
               <div class="absolute inset-0 bg-lattice opacity-40"></div>
               <div class="relative h-full flex items-end p-4">
                 <div class="w-full rounded-md bg-ink-3 border border-white/10 shadow-xl shadow-black/40 divide-y divide-white/5">
-                  <div class="flex items-center gap-2 px-3 py-2 text-[10px]">
+                  <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px]">
                     <svg class="w-3 h-3 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75A2.25 2.25 0 014.5 4.5h15a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75z"/></svg>
                     <span class="text-gray-400 truncate flex-1 font-mono">schmidt-kg@...</span>
                     <span class="text-gray-400 font-mono">14:28</span>
                   </div>
-                  <div class="flex items-center gap-2 px-3 py-2 text-[10px] bg-ice-500/5">
+                  <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px] bg-ice-500/5">
                     <span class="w-1.5 h-1.5 rounded-full bg-ice-400 shrink-0"></span>
                     <span class="text-white truncate flex-1 font-mono">R-2025-08812 · Eingangsrechnung</span>
                     <span class="text-ice-400 font-mono">NEW</span>
                   </div>
-                  <div class="flex items-center gap-2 px-3 py-2 text-[10px]">
+                  <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px]">
                     <svg class="w-3 h-3 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75A2.25 2.25 0 014.5 4.5h15a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75z"/></svg>
                     <span class="text-gray-400 truncate flex-1 font-mono">AB-2025-0412 · Bestellbest.</span>
                     <span class="text-gray-400 font-mono">14:32</span>
@@ -1165,7 +1168,7 @@
               </div>
             </div>
             <div class="p-8">
-              <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">01</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">01</div>
               <h3 class="font-display text-xl font-semibold text-white mb-3">Postfach anbinden</h3>
               <p class="text-sm text-gray-400 leading-relaxed">
                 OAuth über Microsoft&nbsp;365. Der Agent liest ausschließlich aus einem gemeinsamen Postfach oder Unterordner — read-only, bis Sie ihn freischalten.
@@ -1187,14 +1190,14 @@
                 </div>
                 <svg class="w-4 h-4 text-ice-500/60 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-5-7l7 7-7 7"/></svg>
                 <div class="space-y-1">
-                  <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-ink-3 border border-emerald-500/30 text-[9px] font-mono text-emerald-400"><span>✓</span> UID</div>
-                  <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-ink-3 border border-emerald-500/30 text-[9px] font-mono text-emerald-400"><span>✓</span> BESTELL</div>
-                  <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-ink-3 border border-emerald-500/30 text-[9px] font-mono text-emerald-400"><span>✓</span> BETRAG</div>
+                  <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-ink-3 border border-emerald-500/30 text-[11px] md:text-[9px] font-mono text-emerald-400"><span>✓</span> UID</div>
+                  <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-ink-3 border border-emerald-500/30 text-[11px] md:text-[9px] font-mono text-emerald-400"><span>✓</span> BESTELL</div>
+                  <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-ink-3 border border-emerald-500/30 text-[11px] md:text-[9px] font-mono text-emerald-400"><span>✓</span> BETRAG</div>
                 </div>
               </div>
             </div>
             <div class="p-8">
-              <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">02</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">02</div>
               <h3 class="font-display text-xl font-semibold text-white mb-3">KI-Agent extrahiert</h3>
               <p class="text-sm text-gray-400 leading-relaxed">
                 Wahlweise Gemini, OpenAI oder Anthropic klassifiziert und extrahiert. Validierung inline: UID-Checksumme, Betragsmath, Positionen-Matching — bevor der Agent weitermacht.
@@ -1209,12 +1212,12 @@
               <div class="relative h-full flex items-center justify-center p-4">
                 <div class="w-full max-w-[220px] rounded-md bg-ink-3 border border-ice-500/25 shadow-xl shadow-black/40">
                   <div class="flex items-center justify-between px-3 py-1.5 border-b border-white/5">
-                    <span class="text-[10px] font-mono text-white">PSI Penta</span>
-                    <span class="text-[9px] font-mono text-emerald-400 flex items-center gap-1">
+                    <span class="text-[11px] md:text-[10px] font-mono text-white">PSI Penta</span>
+                    <span class="text-[11px] md:text-[9px] font-mono text-emerald-400 flex items-center gap-1">
                       <span class="w-1 h-1 rounded-full bg-emerald-400 animate-pulse"></span>LIVE
                     </span>
                   </div>
-                  <div class="px-3 py-2 space-y-1 font-mono text-[9px]">
+                  <div class="px-3 py-2 space-y-1 font-mono text-[11px] md:text-[9px]">
                     <div class="flex justify-between"><span class="text-gray-400">PREK</span><span class="text-white">880012</span></div>
                     <div class="flex justify-between"><span class="text-gray-400">ORDER</span><span class="text-ice-300">205380</span></div>
                     <div class="flex justify-between"><span class="text-gray-400">BETRAG</span><span class="text-white">4.281,60</span></div>
@@ -1224,7 +1227,7 @@
               </div>
             </div>
             <div class="p-8">
-              <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">03</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">03</div>
               <h3 class="font-display text-xl font-semibold text-white mb-3">Direkt ins PSI&nbsp;Penta</h3>
               <p class="text-sm text-gray-400 leading-relaxed">
                 REST-API-Buchung in PREK, PEKK oder PEKP — mit PDF-Beleg und Bestellverknüpfung. Abweichungen landen im Prüfpostfach, nicht im ERP.
@@ -1258,7 +1261,7 @@
                 <div class="font-display font-semibold text-white">Jasper Castell</div>
                 <div class="text-sm text-gray-400">Informatiker · Gründer</div>
               </div>
-              <div class="font-mono text-[10px] uppercase tracking-widest text-gray-400">Berlin</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400">Berlin</div>
             </div>
           </div>
 
@@ -1276,15 +1279,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-4 pt-6 border-t hairline">
               <div>
                 <div class="font-display text-xl md:text-2xl font-semibold text-white leading-tight">Berlin&nbsp;&amp;&nbsp;Wien</div>
-                <div class="font-mono text-[10px] uppercase tracking-widest text-gray-400 mt-2">Standorte</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-2">Standorte</div>
               </div>
               <div>
                 <div class="font-display text-xl md:text-2xl font-semibold text-white leading-tight">100%</div>
-                <div class="font-mono text-[10px] uppercase tracking-widest text-gray-400 mt-2">PSI&nbsp;Penta Fokus</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-2">PSI&nbsp;Penta Fokus</div>
               </div>
               <div>
                 <div class="font-display text-xl md:text-2xl font-semibold text-white leading-tight">24/7</div>
-                <div class="font-mono text-[10px] uppercase tracking-widest text-gray-400 mt-2">Agent-Verfügbarkeit</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-2">Agent-Verfügbarkeit</div>
               </div>
             </div>
           </div>
@@ -1308,47 +1311,47 @@
         <div class="rounded-2xl border hairline overflow-hidden bg-ink-2">
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 divide-y sm:divide-x md:divide-y-0 divide-white/5">
             <div class="p-8 md:p-10 flex flex-col justify-between min-h-[180px]">
-              <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Rechnungen</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Rechnungen</div>
               <div>
                 <div class="font-display text-4xl md:text-6xl font-semibold text-white tracking-tight leading-none mt-6">
                   1.700<span class="text-ice-500">+</span>
                 </div>
-                <div class="font-mono text-[10px] uppercase tracking-widest text-gray-400 mt-3">pro&nbsp;Monat</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-3">pro&nbsp;Monat</div>
               </div>
             </div>
 
             <div class="p-8 md:p-10 flex flex-col justify-between min-h-[180px]">
-              <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Bestellbestätigungen</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Bestellbestätigungen</div>
               <div>
                 <div class="font-display text-4xl md:text-6xl font-semibold text-white tracking-tight leading-none mt-6">
                   1.500<span class="text-ice-500">+</span>
                 </div>
-                <div class="font-mono text-[10px] uppercase tracking-widest text-gray-400 mt-3">pro&nbsp;Monat</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-3">pro&nbsp;Monat</div>
               </div>
             </div>
 
             <div class="p-8 md:p-10 flex flex-col justify-between min-h-[180px]">
-              <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Automatisiert</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Automatisiert</div>
               <div>
                 <div class="font-display text-4xl md:text-6xl font-semibold text-white tracking-tight leading-none mt-6">
                   2
                 </div>
-                <div class="font-mono text-[10px] uppercase tracking-widest text-gray-400 mt-3">Vollzeitstellen</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-3">Vollzeitstellen</div>
               </div>
             </div>
 
             <div class="p-8 md:p-10 flex flex-col justify-between min-h-[180px]">
-              <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Pilotbetrieb</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Pilotbetrieb</div>
               <div>
                 <div class="font-display text-4xl md:text-6xl font-semibold text-white tracking-tight leading-none mt-6">
                   4
                 </div>
-                <div class="font-mono text-[10px] uppercase tracking-widest text-gray-400 mt-3">Wochen&nbsp;bis&nbsp;live</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-3">Wochen&nbsp;bis&nbsp;live</div>
               </div>
             </div>
           </div>
 
-          <div class="border-t hairline px-6 md:px-10 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 font-mono text-[10px] text-gray-400">
+          <div class="border-t hairline px-6 md:px-10 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 font-mono text-[11px] md:text-[10px] text-gray-400">
             <div class="flex items-center gap-3">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               <span class="uppercase tracking-widest">Live seit 2025 · Seisenbacher GmbH</span>
@@ -1457,8 +1460,8 @@
           </p>
 
           <a href="mailto:hello@pentaflow.ai?subject=PSI%20Penta%20Potential-Analyse"
-             class="email-cta group inline-flex items-center gap-3">
-            <span class="font-display text-2xl md:text-4xl font-semibold text-white group-hover:text-ice-400 transition-colors">
+             class="email-cta group inline-flex items-center gap-3 pt-1.5">
+            <span class="font-display text-xl md:text-4xl font-semibold text-white group-hover:text-ice-400 transition-colors">
               hello@pentaflow.ai
             </span>
             <svg class="w-5 h-5 text-ice-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -1466,7 +1469,7 @@
             </svg>
           </a>
 
-          <div class="mt-8 font-mono text-[10px] uppercase tracking-widest text-gray-400 flex items-center justify-center gap-3">
+          <div class="mt-8 font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 flex items-center justify-center gap-3">
             <span class="flex items-center gap-1.5">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               Antwort in 24h
@@ -1477,7 +1480,7 @@
 
           <div class="mt-10 pt-6 border-t hairline max-w-sm mx-auto">
             <a href="https://calendly.com/jasper-castell/30min" target="_blank" rel="noopener noreferrer"
-               class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-ice-400 transition-colors group">
+               class="inline-flex items-center gap-2 py-3 text-sm text-gray-400 hover:text-ice-400 transition-colors group">
               <svg class="w-4 h-4 text-gray-400 group-hover:text-ice-400 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
               </svg>
@@ -1502,8 +1505,8 @@
           <span class="block sm:inline">Berlin &amp; Wien</span>
         </div>
         <div class="flex items-center gap-6">
-          <a href="impressum.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors">Impressum</a>
-          <a href="datenschutz.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors">Datenschutz</a>
+          <a href="impressum.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors py-3">Impressum</a>
+          <a href="datenschutz.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors py-3">Datenschutz</a>
         </div>
       </div>
     </div>
@@ -1513,11 +1516,25 @@
     // Mobile menu toggle
     const menuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
+    const menuIconOpen = document.getElementById('mobile-menu-icon-open');
+    const menuIconClose = document.getElementById('mobile-menu-icon-close');
+    const setMenuOpen = (open) => {
+      mobileMenu.classList.toggle('hidden', !open);
+      menuIconOpen.classList.toggle('hidden', open);
+      menuIconClose.classList.toggle('hidden', !open);
+      menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      menuBtn.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+    };
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setMenuOpen(mobileMenu.classList.contains('hidden'));
     });
     mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+      link.addEventListener('click', () => setMenuOpen(false));
+    });
+    document.addEventListener('click', (e) => {
+      if (mobileMenu.classList.contains('hidden')) return;
+      if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target)) setMenuOpen(false);
     });
 
     // Scroll reveal (lightweight)
