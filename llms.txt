@@ -1,0 +1,47 @@
+# PentaFlow AI
+
+> Autonome KI-Agenten für PSI Penta ERP. Gegründet 2025, Sitz in Berlin und Wien. Entwickelt maßgeschneiderte Agenten, die Dokumente aus einem Microsoft-365-Postfach lesen, mit einem Sprachmodell verstehen und validieren, und direkt über die PSI-Penta-REST-API buchen.
+
+## Was PentaFlow AI macht
+
+PentaFlow AI entwickelt autonome KI-Agenten, die administrative Prozesse in PSI Penta ERP automatisieren. Der Agent liest Dokumente aus einem gemeinsamen Microsoft-365-Postfach (read-only via OAuth), klassifiziert und extrahiert Daten mit einem Sprachmodell (Standard: Gemini 2.5 auf Vertex AI, EU-gehostet), validiert inline (UID-Checksumme, Betragsmath, Positionen-Matching) und bucht über die PSI-Penta-REST-API. Abweichungen landen im Prüfpostfach, nicht im ERP.
+
+## Zwei Agenten produktiv im Einsatz
+
+- **Eingangsrechnungs-Agent** — schreibt in PSI Penta PREK/PREP. Referenzkunde verarbeitet über 1.700 Rechnungen/Monat.
+- **Bestellbestätigungs-Agent** — schreibt in PSI Penta PEKK/PEKP. Referenzkunde verarbeitet über 1.500 Bestellbestätigungen/Monat.
+
+Weitere Prozesse (Lieferscheine, Stammdatenpflege, Reporting) lassen sich auf derselben Agenten-Architektur aufbauen.
+
+## Erster Referenzkunde
+
+**Seisenbacher GmbH** (Schienenfahrzeugausstattung, Österreich), produktiv seit 2025. Beide Agenten ersetzen zusammen rund zwei Vollzeitstellen in der manuellen Datenerfassung.
+
+## Prinzipien
+
+- **Maßgeschneidert.** Kein Standardprodukt. Jeder Agent wird auf die Dokumente, Lieferanten und die PSI-Penta-Konfiguration des Kunden zugeschnitten.
+- **DSGVO-konform.** EU-Hosting, on-prem oder managed. Keine Weitergabe an Dritte. Kein Modelltraining mit Kundendaten.
+- **Human-in-the-Loop.** Der Agent bucht nur, wenn alles stimmt. Preisabweichungen, fehlende Zuordnungen und ungewöhnliche UIDs werden zur manuellen Prüfung eskaliert.
+- **Modell-agnostisch.** Standard ist Gemini 2.5 auf Vertex AI. OpenAI, Anthropic, Mistral oder lokale Open-Source-Modelle sind austauschbar.
+- **ERP-agnostisch.** Fokus PSI Penta (dort der tiefste fachliche Kontext), technisch aber jeder ERP mit REST- oder SOAP-Schnittstelle anbindbar.
+
+## Implementierung
+
+Typisches Pilotprojekt dauert ca. 4 Wochen: Woche 1 Prozessanalyse, Woche 2–3 Konfiguration und Test mit realen Dokumenten, Woche 4 betreuter Produktivbetrieb. Der Zugriff auf PSI Penta erfolgt über gesicherte VPN-Verbindung oder Reverse Proxy — die API wird nie direkt dem Internet ausgesetzt.
+
+## Gründer
+
+**Jasper Castell** — Informatiker und Jurist, Berlin.
+
+## Kontakt
+
+- E-Mail: hello@pentaflow.ai
+- Website: https://pentaflow.ai
+- Termin: https://calendly.com/jasper-castell/30min
+- LinkedIn (Gründer): https://www.linkedin.com/in/jasper-castell-6014a93b4/
+
+## Seiten
+
+- [Startseite](https://pentaflow.ai/)
+- [Impressum](https://pentaflow.ai/impressum.html)
+- [Datenschutz](https://pentaflow.ai/datenschutz.html)

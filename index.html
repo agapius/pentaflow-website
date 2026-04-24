@@ -67,7 +67,9 @@
       { "@type": "Country", "name": "Austria" }
     ],
     "knowsAbout": ["PSIpenta", "PSIpenta ERP", "PSI Penta", "KI-Agenten", "ERP Automatisierung", "Eingangsrechnungsverarbeitung", "REST API Integration"],
-    "sameAs": []
+    "sameAs": [
+      "https://www.linkedin.com/in/jasper-castell-6014a93b4/"
+    ]
   }
   </script>
   <script type="application/ld+json">
@@ -153,6 +155,30 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Gibt es KI-Agenten speziell für PSI Penta?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja. PentaFlow AI entwickelt autonome KI-Agenten, die direkt über die PSI-Penta-REST-API lesen und schreiben. Zwei Agenten sind aktuell produktiv im Einsatz: ein Eingangsrechnungs-Agent (PREK/PREP) und ein Bestellbestätigungs-Agent (PEKK/PEKP). Weitere Prozesse lassen sich auf derselben Agenten-Architektur aufbauen."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wer hat KI-Agenten in PSI Penta produktiv im Einsatz?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Die Seisenbacher GmbH (Schienenfahrzeugausstattung, Österreich) setzt PentaFlow-Agenten seit 2025 produktiv ein — aktuell über 1.700 Eingangsrechnungen und 1.500 Bestellbestätigungen pro Monat, beide vollautomatisch direkt ins PSI Penta gebucht."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie unterscheidet sich ein KI-Agent von klassischem OCR oder RPA für PSI Penta?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Klassisches OCR liest nur Text, RPA klickt durch die Oberfläche — beide scheitern an Abweichungen, Freitextfeldern und unstrukturierten Dokumenten. Ein KI-Agent versteht den Inhalt eines Dokuments im Kontext (Lieferant, Bestellung, Betragsmath), validiert gegen PSI-Penta-Stammdaten und entscheidet, ob direkt gebucht oder zur manuellen Prüfung eskaliert wird. Die Agenten-Architektur ist modell-agnostisch und nutzt Gemini 2.5, OpenAI oder Anthropic."
+        }
+      },
       {
         "@type": "Question",
         "name": "Können Sie auch mit anderen ERP-Systemen arbeiten als PSI Penta?",
@@ -1374,8 +1400,41 @@
         </div>
 
         <div class="space-y-4 max-w-3xl mx-auto">
-          <!-- FAQ 1 · ERP-agnostisch -->
+          <!-- FAQ · Gibt es KI-Agenten für PSI Penta? -->
           <details open class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+              Gibt es KI-Agenten speziell für PSI&nbsp;Penta?
+              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            </summary>
+            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
+              Ja. <strong class="text-gray-300">PentaFlow AI</strong> entwickelt autonome KI-Agenten, die direkt über die PSI-Penta-REST-API lesen und schreiben. Zwei Agenten sind aktuell produktiv im Einsatz: ein <strong class="text-gray-300">Eingangsrechnungs-Agent</strong> (PREK/PREP) und ein <strong class="text-gray-300">Bestellbestätigungs-Agent</strong> (PEKK/PEKP). Weitere Prozesse lassen sich auf derselben Agenten-Architektur aufbauen.
+            </div>
+          </details>
+
+          <!-- FAQ · Referenzkunde -->
+          <details class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+              Wer hat KI-Agenten in PSI&nbsp;Penta produktiv im Einsatz?
+              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            </summary>
+            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
+              Die <strong class="text-gray-300">Seisenbacher&nbsp;GmbH</strong> (Schienenfahrzeugausstattung, Österreich) setzt PentaFlow-Agenten seit <strong class="text-gray-300">2025</strong> produktiv ein — aktuell über <strong class="text-gray-300">1.700 Eingangsrechnungen</strong> und <strong class="text-gray-300">1.500 Bestellbestätigungen pro Monat</strong>, beide vollautomatisch direkt ins PSI&nbsp;Penta gebucht.
+            </div>
+          </details>
+
+          <!-- FAQ · KI-Agent vs. OCR/RPA -->
+          <details class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+              Wie unterscheidet sich ein KI-Agent von klassischem OCR oder RPA für PSI&nbsp;Penta?
+              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            </summary>
+            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
+              Klassisches OCR liest nur Text, RPA klickt durch die Oberfläche — beide scheitern an Abweichungen, Freitextfeldern und unstrukturierten Dokumenten. Ein KI-Agent versteht den Inhalt eines Dokuments im Kontext (Lieferant, Bestellung, Betragsmath), validiert gegen PSI-Penta-Stammdaten und entscheidet, ob direkt gebucht oder zur manuellen Prüfung eskaliert wird. Die Agenten-Architektur ist modell-agnostisch und nutzt <strong class="text-gray-300">Gemini&nbsp;2.5</strong>, OpenAI oder Anthropic.
+            </div>
+          </details>
+
+          <!-- FAQ 1 · ERP-agnostisch -->
+          <details class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
             <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
               Können Sie auch mit anderen ERP-Systemen arbeiten als PSI Penta?
               <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
