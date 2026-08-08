@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PentaFlow AI — KI-Agenten für PSIpenta ERP</title>
-  <meta name="description" content="Autonome KI-Agenten für PSIpenta ERP: Eingangsrechnungen, Bestellbestätigungen & mehr — vollautomatisch über die PSI Penta REST API. ✓ DSGVO-konform ✓ Human-in-the-Loop ✓ 4 Wochen bis zum Pilotbetrieb. Jetzt kostenlose Erstberatung!">
-  <meta name="keywords" content="psi penta ki, psi penta ai, psipenta ki, psipenta ai, psi penta agenten, penta ai, psi penta erp, psipenta eingangsrechnung, psi penta automatisierung, psi penta rest api, ki dokumentenverarbeitung, automatische rechnungsverarbeitung">
+  <meta name="description" content="PentaFlow AI: Maßgeschneiderte KI-Agenten automatisieren Eingangsrechnungen und Bestellbestätigungen direkt im PSIpenta ERP – in 4 Wochen produktiv.">
   <meta name="robots" content="index, follow">
   <meta name="author" content="PentaFlow AI">
   <link rel="canonical" href="https://pentaflow.ai/">
@@ -58,109 +57,71 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "PentaFlow AI",
-    "url": "https://pentaflow.ai",
-    "logo": "https://pentaflow.ai/pentaflow-logo.png",
-    "image": "https://pentaflow.ai/og-image.png",
-    "email": "hello@pentaflow.ai",
-    "description": "PentaFlow AI entwickelt autonome KI-Agenten für PSIpenta ERP Automatisierung.",
-    "address": [
+    "@graph": [
       {
-        "@type": "PostalAddress",
-        "addressLocality": "Berlin",
-        "addressCountry": "DE"
-      },
-      {
-        "@type": "PostalAddress",
-        "addressLocality": "Wien",
-        "addressCountry": "AT"
-      }
-    ],
-    "areaServed": [
-      { "@type": "Country", "name": "Germany" },
-      { "@type": "Country", "name": "Austria" }
-    ],
-    "knowsAbout": ["PSIpenta", "PSIpenta ERP", "PSI Penta", "KI-Agenten", "ERP Automatisierung", "Eingangsrechnungsverarbeitung", "REST API Integration"],
-    "sameAs": [
-      "https://www.linkedin.com/in/jasper-castell-6014a93b4/"
-    ]
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "PentaFlow AI",
-    "url": "https://pentaflow.ai",
-    "description": "Autonome KI-Agenten für PSIpenta ERP Automatisierung"
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "PentaFlow AI",
-    "url": "https://pentaflow.ai",
-    "logo": "https://pentaflow.ai/pentaflow-logo.png",
-    "image": "https://pentaflow.ai/og-image.png",
-    "email": "hello@pentaflow.ai",
-    "address": [
-      {
-        "@type": "PostalAddress",
-        "addressLocality": "Berlin",
-        "addressCountry": "DE"
-      },
-      {
-        "@type": "PostalAddress",
-        "addressLocality": "Wien",
-        "addressCountry": "AT"
-      }
-    ],
-    "description": "Beratung und Entwicklung autonomer KI-Agenten für PSIpenta ERP Systeme.",
-    "priceRange": "$$$$"
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "PentaFlow AI",
-    "url": "https://pentaflow.ai",
-    "image": "https://pentaflow.ai/og-image.png",
-    "description": "Maßgeschneiderte KI-Agenten für PSIpenta ERP. Automatisierung von Eingangsrechnungen, Bestellbestätigungen und weiteren Fachprozessen — DSGVO-konform, EU-hosted, mit Human-in-the-Loop.",
-    "serviceType": "KI-Agent-Entwicklung für PSIpenta ERP",
-    "areaServed": [
-      { "@type": "Country", "name": "Germany" },
-      { "@type": "Country", "name": "Austria" },
-      { "@type": "Country", "name": "Switzerland" }
-    ]
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Review",
-    "itemReviewed": {
-      "@type": "Organization",
-      "name": "PentaFlow AI",
-      "url": "https://pentaflow.ai"
-    },
-    "author": {
-      "@type": "Person",
-      "name": "Christian Forstner",
-      "jobTitle": "CEO",
-      "worksFor": {
         "@type": "Organization",
-        "name": "Seisenbacher GmbH"
+        "@id": "https://pentaflow.ai/#organization",
+        "name": "PentaFlow AI",
+        "url": "https://pentaflow.ai/",
+        "logo": "https://pentaflow.ai/pentaflow-logo.png",
+        "image": "https://pentaflow.ai/og-image.png",
+        "email": "hello@pentaflow.ai",
+        "description": "PentaFlow AI entwickelt maßgeschneiderte KI-Agenten für die Automatisierung von PSIpenta ERP.",
+        "address": [
+          {
+            "@type": "PostalAddress",
+            "addressLocality": "Berlin",
+            "addressCountry": "DE"
+          },
+          {
+            "@type": "PostalAddress",
+            "addressLocality": "Wien",
+            "addressCountry": "AT"
+          }
+        ],
+        "areaServed": [
+          { "@type": "Country", "name": "Germany" },
+          { "@type": "Country", "name": "Austria" },
+          { "@type": "Country", "name": "Switzerland" }
+        ],
+        "knowsAbout": ["PSIpenta", "PSIpenta ERP", "PSI Penta", "KI-Agenten", "ERP Automatisierung", "Eingangsrechnungsverarbeitung", "REST API Integration"],
+        "founder": { "@id": "https://pentaflow.ai/#jasper-castell" }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://pentaflow.ai/#website",
+        "name": "PentaFlow AI",
+        "url": "https://pentaflow.ai/",
+        "description": "Maßgeschneiderte KI-Agenten für PSIpenta ERP Automatisierung",
+        "publisher": { "@id": "https://pentaflow.ai/#organization" },
+        "inLanguage": "de-DE"
+      },
+      {
+        "@type": "Service",
+        "@id": "https://pentaflow.ai/#service",
+        "name": "KI-Agent-Entwicklung für PSIpenta ERP",
+        "url": "https://pentaflow.ai/",
+        "description": "Maßgeschneiderte KI-Agenten für PSIpenta ERP. Automatisierung von Eingangsrechnungen, Bestellbestätigungen und weiteren Fachprozessen.",
+        "serviceType": "KI-Agent-Entwicklung für PSIpenta ERP",
+        "provider": { "@id": "https://pentaflow.ai/#organization" },
+        "areaServed": [
+          { "@type": "Country", "name": "Germany" },
+          { "@type": "Country", "name": "Austria" },
+          { "@type": "Country", "name": "Switzerland" }
+        ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://pentaflow.ai/#jasper-castell",
+        "name": "Jasper Castell",
+        "jobTitle": "Gründer",
+        "url": "https://pentaflow.ai/#ueber-uns",
+        "sameAs": [
+          "https://www.linkedin.com/in/jasper-castell-6014a93b4/"
+        ],
+        "worksFor": { "@id": "https://pentaflow.ai/#organization" }
       }
-    },
-    "reviewBody": "Uns war wichtig, dass KI bei uns nicht nur funktioniert, sondern dass wir die Kontrolle behalten. PentaFlow liest unsere Eingangsrechnungen und Bestellbestätigungen direkt aus dem Postfach ins PSI Penta — und markiert zuverlässig, was geprüft werden muss. In vier Wochen waren wir produktiv.",
-    "reviewRating": {
-      "@type": "Rating",
-      "ratingValue": "5",
-      "bestRating": "5"
-    }
+    ]
   }
   </script>
 
