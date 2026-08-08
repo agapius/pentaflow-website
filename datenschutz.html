@@ -12,28 +12,56 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#09090b">
+  <meta name="color-scheme" content="dark light">
 
-  <style>html,body{background:#04060a;color:#e5e7eb;margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif}</style>
-  <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="style.css"></noscript>
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', saved);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', saved === 'light' ? '#f4f0e8' : '#09090b');
+        }
+      } catch (e) { /* silent fallback to dark */ }
+    })();
+  </script>
+
+  <style>html,body{background:#04060a;color:#e5e7eb;margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif}html[data-theme="light"],html[data-theme="light"] body{background:#f4f0e8;color:rgb(51 65 85)}</style>
+  <!-- Render-blocking stylesheet prevents unstyled layout from painting -->
+  <link rel="stylesheet" href="style.css">
   <style>
     html { scroll-behavior: smooth; }
     body {
       font-feature-settings: 'ss01', 'cv11';
       -webkit-font-smoothing: antialiased;
     }
-    .hairline { border-color: rgba(255,255,255,0.06); }
-    .hairline-strong { border-color: rgba(255,255,255,0.1); }
+    .hairline { border-color: rgb(var(--hairline-color) / 0.06); }
+    .hairline-strong { border-color: rgb(var(--hairline-strong-color) / 0.1); }
     .nav-blur { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .logo-text { color: rgb(var(--logo-text)); }
+    .logo-mark {
+      display: inline-block;
+      width: 24px; height: 24px;
+      -webkit-mask: url('pentaflow%20logo.svg') no-repeat center / contain;
+              mask: url('pentaflow%20logo.svg') no-repeat center / contain;
+      background-color: rgb(var(--logo-text));
+      opacity: 0.9;
+    }
+    .theme-icon { width: 16px; height: 16px; display: block; }
+    .theme-icon-moon { display: none; }
+    [data-theme="light"] .theme-icon-sun { display: none; }
+    [data-theme="light"] .theme-icon-moon { display: block; }
     .section-label {
       display: inline-flex; align-items: center; gap: 10px;
       font-family: 'JetBrains Mono', ui-monospace, monospace;
       font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-      color: #5b8eff;
+      color: rgb(var(--section-label-text));
     }
     .section-label::before {
       content: ""; display: inline-block; width: 24px; height: 1px;
-      background: #3478ff;
+      background: rgb(var(--section-label-bar));
     }
     .prose h2 { margin-top: 2.5rem; }
     .prose h3 { margin-top: 1.5rem; }
@@ -42,28 +70,54 @@
     .prose li { margin-top: 0.25rem; }
   </style>
 </head>
-<body class="bg-ink-0 text-gray-200 antialiased">
+<body class="bg-ink-0 text-fg-default antialiased">
 
   <!-- Navigation -->
   <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-ink-0/85 border-b hairline">
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex items-center justify-between h-16">
         <a href="index.html" class="flex items-center gap-2.5">
-          <img src="pentaflow%20logo.svg" alt="" aria-hidden="true" class="w-6 h-6 opacity-90">
-          <span class="font-display text-sm font-semibold tracking-tight" style="color:#D9D9D9">PentaFlow</span>
+          <span class="logo-mark" aria-hidden="true"></span>
+          <span class="font-display text-sm font-semibold tracking-tight logo-text">PentaFlow</span>
         </a>
-        <a href="index.html" class="px-2.5 py-1.5 rounded border hairline text-[11px] font-mono text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">← Zurück zur Startseite</a>
+        <div class="flex items-center gap-1 text-[11px] font-mono">
+          <button id="theme-toggle" type="button" class="w-8 h-7 flex items-center justify-center rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors" aria-label="Theme umschalten" aria-pressed="false">
+            <svg class="theme-icon theme-icon-moon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg class="theme-icon theme-icon-sun" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          </button>
+          <a href="index.html" class="px-2.5 py-1.5 rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors">← Zurück</a>
+        </div>
       </div>
     </div>
   </nav>
 
+  <script>
+    (function () {
+      var btn = document.getElementById('theme-toggle');
+      if (!btn) return;
+      var meta = document.querySelector('meta[name="theme-color"]');
+      var sync = function () {
+        btn.setAttribute('aria-pressed', document.documentElement.getAttribute('data-theme') === 'light' ? 'true' : 'false');
+      };
+      btn.addEventListener('click', function () {
+        var current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        var next = current === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        if (meta) meta.setAttribute('content', next === 'light' ? '#f4f0e8' : '#09090b');
+        sync();
+      });
+      sync();
+    })();
+  </script>
+
   <main class="pt-32 pb-24">
-    <div class="max-w-3xl mx-auto px-6 prose text-gray-300 leading-relaxed">
+    <div class="max-w-3xl mx-auto px-6 prose text-fg-default leading-relaxed">
       <p class="section-label mb-6">Rechtliches</p>
-      <h1 class="font-display text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05] mb-12">Datenschutzerklärung</h1>
+      <h1 class="font-display text-3xl md:text-5xl font-semibold text-fg-strong tracking-tight leading-[1.05] mb-12">Datenschutzerklärung</h1>
 
       <!-- 1. Verantwortlicher -->
-      <h2 class="font-display text-xl font-semibold text-white">1. Verantwortlicher</h2>
+      <h2 class="font-display text-xl font-semibold text-fg-strong">1. Verantwortlicher</h2>
       <p>
         Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:
       </p>
@@ -76,17 +130,17 @@
       </p>
 
       <!-- 2. Allgemeines -->
-      <h2 class="font-display text-xl font-semibold text-white">2. Allgemeines zur Datenverarbeitung</h2>
+      <h2 class="font-display text-xl font-semibold text-fg-strong">2. Allgemeines zur Datenverarbeitung</h2>
       <p>
         Wir verarbeiten personenbezogene Daten unserer Nutzer grundsätzlich nur, soweit dies zur Bereitstellung einer funktionsfähigen Website sowie unserer Inhalte und Leistungen erforderlich ist. Die Verarbeitung personenbezogener Daten erfolgt regelmäßig nur nach Einwilligung des Nutzers oder wenn die Verarbeitung durch gesetzliche Vorschriften gestattet ist.
       </p>
 
       <!-- 3. Hosting -->
-      <h2 class="font-display text-xl font-semibold text-white">3. Hosting</h2>
+      <h2 class="font-display text-xl font-semibold text-fg-strong">3. Hosting</h2>
       <p>
-        Diese Website wird bei <strong class="text-white">GitHub Pages</strong> (GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) gehostet. Beim Aufruf unserer Website werden durch den Hosting-Anbieter automatisch Informationen in sogenannten Server-Log-Dateien gespeichert, die Ihr Browser automatisch übermittelt. Dies sind:
+        Diese Website wird bei <strong class="text-fg-strong">GitHub Pages</strong> (GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) gehostet. Beim Aufruf unserer Website werden durch den Hosting-Anbieter automatisch Informationen in sogenannten Server-Log-Dateien gespeichert, die Ihr Browser automatisch übermittelt. Dies sind:
       </p>
-      <ul class="text-gray-400">
+      <ul class="text-fg-muted">
         <li>IP-Adresse des anfragenden Rechners</li>
         <li>Datum und Uhrzeit des Zugriffs</li>
         <li>Name und URL der abgerufenen Datei</li>
@@ -100,13 +154,13 @@
       </p>
 
       <!-- 4. Schriftarten -->
-      <h2 class="font-display text-xl font-semibold text-white">4. Schriftarten</h2>
+      <h2 class="font-display text-xl font-semibold text-fg-strong">4. Schriftarten</h2>
       <p>
-        Diese Website nutzt die Schriftarten „Inter", „Space Grotesk" und „JetBrains Mono", die <strong class="text-white">lokal auf unserem Server gehostet</strong> werden. Beim Laden der Schriftarten wird keine Verbindung zu externen Servern hergestellt. Es werden keine Daten an Dritte übermittelt.
+        Diese Website nutzt die Schriftarten „Inter", „Space Grotesk" und „JetBrains Mono", die <strong class="text-fg-strong">lokal auf unserem Server gehostet</strong> werden. Beim Laden der Schriftarten wird keine Verbindung zu externen Servern hergestellt. Es werden keine Daten an Dritte übermittelt.
       </p>
 
       <!-- 5. Kontakt per E-Mail -->
-      <h2 class="font-display text-xl font-semibold text-white">5. Kontaktaufnahme per E-Mail</h2>
+      <h2 class="font-display text-xl font-semibold text-fg-strong">5. Kontaktaufnahme per E-Mail</h2>
       <p>
         Unsere Kontaktaufnahme erfolgt ausschließlich per E-Mail. Wenn Sie uns per E-Mail kontaktieren, werden Ihre Angaben einschließlich der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert. Die Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bearbeitung Ihrer Anfrage).
       </p>
@@ -115,39 +169,39 @@
       </p>
 
       <!-- 6. Cookies -->
-      <h2 class="font-display text-xl font-semibold text-white">6. Cookies</h2>
+      <h2 class="font-display text-xl font-semibold text-fg-strong">6. Cookies</h2>
       <p>
-        Diese Website verwendet <strong class="text-white">keine Cookies</strong>.
+        Diese Website verwendet <strong class="text-fg-strong">keine Cookies</strong>.
       </p>
 
       <!-- 7. Keine Analyse-Tools -->
-      <h2 class="font-display text-xl font-semibold text-white">7. Analyse-Tools und Tracking</h2>
+      <h2 class="font-display text-xl font-semibold text-fg-strong">7. Analyse-Tools und Tracking</h2>
       <p>
-        Diese Website verwendet <strong class="text-white">keine Analyse- oder Tracking-Tools</strong>. Es findet kein Tracking Ihres Nutzungsverhaltens statt.
+        Diese Website verwendet <strong class="text-fg-strong">keine Analyse- oder Tracking-Tools</strong>. Es findet kein Tracking Ihres Nutzungsverhaltens statt.
       </p>
 
       <!-- 8. Betroffenenrechte -->
-      <h2 class="font-display text-xl font-semibold text-white">8. Ihre Rechte</h2>
+      <h2 class="font-display text-xl font-semibold text-fg-strong">8. Ihre Rechte</h2>
       <p>
         Sie haben gegenüber uns folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:
       </p>
-      <ul class="text-gray-400">
-        <li><strong class="text-gray-300">Auskunftsrecht</strong> (Art. 15 DSGVO)</li>
-        <li><strong class="text-gray-300">Recht auf Berichtigung</strong> (Art. 16 DSGVO)</li>
-        <li><strong class="text-gray-300">Recht auf Löschung</strong> (Art. 17 DSGVO)</li>
-        <li><strong class="text-gray-300">Recht auf Einschränkung der Verarbeitung</strong> (Art. 18 DSGVO)</li>
-        <li><strong class="text-gray-300">Recht auf Datenübertragbarkeit</strong> (Art. 20 DSGVO)</li>
-        <li><strong class="text-gray-300">Widerspruchsrecht</strong> (Art. 21 DSGVO)</li>
+      <ul class="text-fg-muted">
+        <li><strong class="text-fg-default">Auskunftsrecht</strong> (Art. 15 DSGVO)</li>
+        <li><strong class="text-fg-default">Recht auf Berichtigung</strong> (Art. 16 DSGVO)</li>
+        <li><strong class="text-fg-default">Recht auf Löschung</strong> (Art. 17 DSGVO)</li>
+        <li><strong class="text-fg-default">Recht auf Einschränkung der Verarbeitung</strong> (Art. 18 DSGVO)</li>
+        <li><strong class="text-fg-default">Recht auf Datenübertragbarkeit</strong> (Art. 20 DSGVO)</li>
+        <li><strong class="text-fg-default">Widerspruchsrecht</strong> (Art. 21 DSGVO)</li>
       </ul>
       <p>
         Zur Ausübung Ihrer Rechte wenden Sie sich bitte an: <a href="mailto:hello@pentaflow.ai" class="underline text-ice-400 hover:text-ice-300 transition-colors">hello@pentaflow.ai</a>
       </p>
       <p>
-        Darüber hinaus haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung Ihrer personenbezogenen Daten zu beschweren. Die für uns zuständige Aufsichtsbehörde ist die <strong class="text-white">Berliner Beauftragte für Datenschutz und Informationsfreiheit</strong>, Friedrichstr. 219, 10969 Berlin.
+        Darüber hinaus haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung Ihrer personenbezogenen Daten zu beschweren. Die für uns zuständige Aufsichtsbehörde ist die <strong class="text-fg-strong">Berliner Beauftragte für Datenschutz und Informationsfreiheit</strong>, Friedrichstr. 219, 10969 Berlin.
       </p>
 
       <!-- 9. Aktualität -->
-      <h2 class="font-display text-xl font-semibold text-white">9. Aktualität dieser Datenschutzerklärung</h2>
+      <h2 class="font-display text-xl font-semibold text-fg-strong">9. Aktualität dieser Datenschutzerklärung</h2>
       <p>
         Stand: April 2026
       </p>
@@ -161,14 +215,14 @@
   <footer class="border-t hairline py-12">
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="text-sm text-gray-400 text-center sm:text-left">
+        <div class="text-sm text-fg-muted text-center sm:text-left">
           <span class="block sm:inline">© 2026 PentaFlow AI</span>
           <span class="hidden sm:inline"> · </span>
           <span class="block sm:inline">Berlin &amp; Wien</span>
         </div>
         <div class="flex items-center gap-6">
-          <a href="impressum.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors">Impressum</a>
-          <a href="datenschutz.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors">Datenschutz</a>
+          <a href="impressum.html" class="text-sm text-fg-muted hover:text-fg-default transition-colors">Impressum</a>
+          <a href="datenschutz.html" class="text-sm text-fg-muted hover:text-fg-default transition-colors">Datenschutz</a>
         </div>
       </div>
     </div>

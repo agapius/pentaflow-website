@@ -12,54 +12,108 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#09090b">
+  <meta name="color-scheme" content="dark light">
 
-  <style>html,body{background:#04060a;color:#e5e7eb;margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif}</style>
-  <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="style.css"></noscript>
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', saved);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', saved === 'light' ? '#f4f0e8' : '#09090b');
+        }
+      } catch (e) { /* silent fallback to dark */ }
+    })();
+  </script>
+
+  <style>html,body{background:#04060a;color:#e5e7eb;margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif}html[data-theme="light"],html[data-theme="light"] body{background:#f4f0e8;color:rgb(51 65 85)}</style>
+  <!-- Render-blocking stylesheet prevents unstyled layout from painting -->
+  <link rel="stylesheet" href="style.css">
   <style>
     html { scroll-behavior: smooth; }
     body {
       font-feature-settings: 'ss01', 'cv11';
       -webkit-font-smoothing: antialiased;
     }
-    .hairline { border-color: rgba(255,255,255,0.06); }
-    .hairline-strong { border-color: rgba(255,255,255,0.1); }
+    .hairline { border-color: rgb(var(--hairline-color) / 0.06); }
+    .hairline-strong { border-color: rgb(var(--hairline-strong-color) / 0.1); }
     .nav-blur { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .logo-text { color: rgb(var(--logo-text)); }
+    .logo-mark {
+      display: inline-block;
+      width: 24px; height: 24px;
+      -webkit-mask: url('pentaflow%20logo.svg') no-repeat center / contain;
+              mask: url('pentaflow%20logo.svg') no-repeat center / contain;
+      background-color: rgb(var(--logo-text));
+      opacity: 0.9;
+    }
+    .theme-icon { width: 16px; height: 16px; display: block; }
+    .theme-icon-moon { display: none; }
+    [data-theme="light"] .theme-icon-sun { display: none; }
+    [data-theme="light"] .theme-icon-moon { display: block; }
     .section-label {
       display: inline-flex; align-items: center; gap: 10px;
       font-family: 'JetBrains Mono', ui-monospace, monospace;
       font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-      color: #5b8eff;
+      color: rgb(var(--section-label-text));
     }
     .section-label::before {
       content: ""; display: inline-block; width: 24px; height: 1px;
-      background: #3478ff;
+      background: rgb(var(--section-label-bar));
     }
   </style>
 </head>
-<body class="bg-ink-0 text-gray-200 antialiased">
+<body class="bg-ink-0 text-fg-default antialiased">
 
   <!-- Navigation -->
   <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-ink-0/85 border-b hairline">
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex items-center justify-between h-16">
         <a href="index.html" class="flex items-center gap-2.5">
-          <img src="pentaflow%20logo.svg" alt="" aria-hidden="true" class="w-6 h-6 opacity-90">
-          <span class="font-display text-sm font-semibold tracking-tight" style="color:#D9D9D9">PentaFlow</span>
+          <span class="logo-mark" aria-hidden="true"></span>
+          <span class="font-display text-sm font-semibold tracking-tight logo-text">PentaFlow</span>
         </a>
-        <a href="index.html" class="px-2.5 py-1.5 rounded border hairline text-[11px] font-mono text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">← Zurück zur Startseite</a>
+        <div class="flex items-center gap-1 text-[11px] font-mono">
+          <button id="theme-toggle" type="button" class="w-8 h-7 flex items-center justify-center rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors" aria-label="Theme umschalten" aria-pressed="false">
+            <svg class="theme-icon theme-icon-moon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg class="theme-icon theme-icon-sun" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          </button>
+          <a href="index.html" class="px-2.5 py-1.5 rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors">← Zurück</a>
+        </div>
       </div>
     </div>
   </nav>
 
+  <script>
+    (function () {
+      var btn = document.getElementById('theme-toggle');
+      if (!btn) return;
+      var meta = document.querySelector('meta[name="theme-color"]');
+      var sync = function () {
+        btn.setAttribute('aria-pressed', document.documentElement.getAttribute('data-theme') === 'light' ? 'true' : 'false');
+      };
+      btn.addEventListener('click', function () {
+        var current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        var next = current === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        if (meta) meta.setAttribute('content', next === 'light' ? '#f4f0e8' : '#09090b');
+        sync();
+      });
+      sync();
+    })();
+  </script>
+
   <main class="pt-32 pb-24">
     <div class="max-w-3xl mx-auto px-6">
       <p class="section-label mb-6">Rechtliches</p>
-      <h1 class="font-display text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05] mb-12">Impressum</h1>
+      <h1 class="font-display text-3xl md:text-5xl font-semibold text-fg-strong tracking-tight leading-[1.05] mb-12">Impressum</h1>
 
-      <div class="space-y-10 text-gray-300 leading-relaxed">
+      <div class="space-y-10 text-fg-default leading-relaxed">
         <section>
-          <h2 class="font-display text-lg font-semibold text-white mb-3">Angaben gemäß § 5 DDG</h2>
+          <h2 class="font-display text-lg font-semibold text-fg-strong mb-3">Angaben gemäß § 5 DDG</h2>
           <p>
             Jasper Castell<br>
             Pentaflow<br>
@@ -70,14 +124,14 @@
         </section>
 
         <section>
-          <h2 class="font-display text-lg font-semibold text-white mb-3">Kontakt</h2>
+          <h2 class="font-display text-lg font-semibold text-fg-strong mb-3">Kontakt</h2>
           <p>
             E-Mail: <a href="mailto:hello@pentaflow.ai" class="underline text-ice-400 hover:text-ice-300 transition-colors">hello@pentaflow.ai</a>
           </p>
         </section>
 
         <section>
-          <h2 class="font-display text-lg font-semibold text-white mb-3">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+          <h2 class="font-display text-lg font-semibold text-fg-strong mb-3">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
           <p>
             Jasper Castell<br>
             Christburger Straße 38<br>
@@ -86,7 +140,7 @@
         </section>
 
         <section>
-          <h2 class="font-display text-lg font-semibold text-white mb-3">EU-Streitschlichtung</h2>
+          <h2 class="font-display text-lg font-semibold text-fg-strong mb-3">EU-Streitschlichtung</h2>
           <p>
             Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
             <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" class="underline text-ice-400 hover:text-ice-300 transition-colors">https://ec.europa.eu/consumers/odr/</a>.
@@ -103,14 +157,14 @@
   <footer class="border-t hairline py-12">
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="text-sm text-gray-400 text-center sm:text-left">
+        <div class="text-sm text-fg-muted text-center sm:text-left">
           <span class="block sm:inline">© 2026 PentaFlow AI</span>
           <span class="hidden sm:inline"> · </span>
           <span class="block sm:inline">Berlin &amp; Wien</span>
         </div>
         <div class="flex items-center gap-6">
-          <a href="impressum.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors">Impressum</a>
-          <a href="datenschutz.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors">Datenschutz</a>
+          <a href="impressum.html" class="text-sm text-fg-muted hover:text-fg-default transition-colors">Impressum</a>
+          <a href="datenschutz.html" class="text-sm text-fg-muted hover:text-fg-default transition-colors">Datenschutz</a>
         </div>
       </div>
     </div>

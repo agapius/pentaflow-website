@@ -19,6 +19,21 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#09090b">
+  <meta name="color-scheme" content="dark light">
+
+  <!-- Theme init — must run before first paint to avoid FOUC -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', saved);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', saved === 'light' ? '#f4f0e8' : '#09090b');
+        }
+      } catch (e) { /* localStorage unavailable — silent fallback to dark */ }
+    })();
+  </script>
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -232,15 +247,14 @@
   </script>
 
   <!-- Critical FOUC prevention before async CSS -->
-  <style>html,body{background:#04060a;color:#e5e7eb;margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif}</style>
+  <style>html,body{background:#04060a;color:#e5e7eb;margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif}html[data-theme="light"],html[data-theme="light"] body{background:#f4f0e8;color:rgb(51 65 85)}</style>
 
   <!-- Preload critical fonts -->
   <link rel="preload" href="fonts/space-grotesk-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/inter-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 
-  <!-- Async stylesheet (non-render-blocking) with noscript fallback -->
-  <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="style.css"></noscript>
+  <!-- Render-blocking stylesheet prevents unstyled layout from painting -->
+  <link rel="stylesheet" href="style.css">
   <style>
     html { scroll-behavior: smooth; }
     body {
@@ -249,21 +263,56 @@
     }
 
     /* Hairlines (border colors) */
-    .hairline { border-color: rgba(255,255,255,0.06); }
-    .hairline-strong { border-color: rgba(255,255,255,0.1); }
+    .hairline { border-color: rgb(var(--hairline-color) / 0.06); }
+    .hairline-strong { border-color: rgb(var(--hairline-strong-color) / 0.1); }
 
     /* Backgrounds */
     .bg-lattice {
       background-image:
-        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+        linear-gradient(rgb(var(--lattice-color) / 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(var(--lattice-color) / 0.025) 1px, transparent 1px);
       background-size: 72px 72px;
       background-position: -1px -1px;
     }
     .bg-navy-glow {
       background:
-        radial-gradient(ellipse 800px 500px at 50% 0%, rgba(0, 31, 84, 0.6) 0%, transparent 70%),
-        radial-gradient(ellipse 600px 400px at 20% 40%, rgba(52, 120, 255, 0.08) 0%, transparent 60%);
+        radial-gradient(ellipse 800px 500px at 50% 0%, rgb(var(--stage-glow-1) / var(--stage-glow-1-alpha)) 0%, transparent 70%),
+        radial-gradient(ellipse 600px 400px at 20% 40%, rgb(var(--stage-glow-2) / var(--stage-glow-2-alpha)) 0%, transparent 60%);
+    }
+
+    /* Pillar preview gradient (theme-aware — flips amber on cream) */
+    .bg-preview-tint {
+      background-image: linear-gradient(to bottom, rgb(var(--preview-tint) / var(--preview-tint-alpha)) 0%, transparent 100%);
+    }
+
+    /* Portrait shadow — navy halo on dark, warm umber on cream */
+    .shadow-portrait { box-shadow: var(--portrait-shadow); }
+
+    /* Hero stage shadows flip per theme (defined in input.css). */
+    .shadow-stage-paper { box-shadow: var(--shadow-stage-paper); }
+    .shadow-stage-erp   { box-shadow: var(--shadow-stage-erp); }
+    .shadow-stage-chip  { box-shadow: var(--shadow-stage-chip); }
+
+    /* Theme toggle icons + mobile labels.
+       Icons + labels are both action-based: shown glyph represents the theme
+       the click will switch TO. */
+    .theme-icon { width: 16px; height: 16px; display: block; }
+    .theme-icon-moon { display: none; }
+    [data-theme="light"] .theme-icon-sun { display: none; }
+    [data-theme="light"] .theme-icon-moon { display: block; }
+    .theme-icon-label-light { display: none; }
+    [data-theme="light"] .theme-icon-label-dark { display: none; }
+    [data-theme="light"] .theme-icon-label-light { display: inline; }
+
+    /* Logo — wordmark text + SVG icon both flip to navy on cream */
+    .logo-text { color: rgb(var(--logo-text)); }
+    .logo-mark {
+      display: inline-block;
+      width: 24px; height: 24px;
+      -webkit-mask: url('pentaflow%20logo.svg') no-repeat center / contain;
+              mask: url('pentaflow%20logo.svg') no-repeat center / contain;
+      background-color: rgb(var(--logo-text));
+      opacity: 0.9;
     }
 
     /* Section label (kicker) */
@@ -271,11 +320,11 @@
       display: inline-flex; align-items: center; gap: 10px;
       font-family: 'JetBrains Mono', ui-monospace, monospace;
       font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-      color: #5b8eff;
+      color: rgb(var(--section-label-text));
     }
     .section-label::before {
       content: ""; display: inline-block; width: 24px; height: 1px;
-      background: #3478ff;
+      background: rgb(var(--section-label-bar));
     }
 
     /* Nav backdrop blur */
@@ -342,6 +391,33 @@
          9.5 → 10.0  blank gap before restart
        ============================================================= */
     .proto01-stage { position: relative; }
+    /* In light mode, the cream-on-cream fill adds no contrast — drop it
+       so the cards float on the page with their warm umber shadows. Keep a
+       very subtle navy hairline so the stage rectangle is defined as a
+       contained zone, not vanished. */
+    [data-theme="light"] .proto01-stage {
+      background: transparent;
+      border-color: rgba(20, 32, 87, 0.08);
+    }
+
+    /* Pillar cards on cream — bg-ink-2 sits very close to the page bg, so the
+       default hairline (navy /0.06) reads as ghost. Bump to /0.08 to match
+       the hero stage and give the cards a clean carded edge. The :hover
+       variant mirrors the Tailwind hover:border-ice-500/30 utility (which
+       this override would otherwise out-specify). */
+    [data-theme="light"] #prinzipien .grid > div.rounded-2xl {
+      border-color: rgba(20, 32, 87, 0.08);
+    }
+    [data-theme="light"] #prinzipien .grid > div.rounded-2xl:hover {
+      /* Stay in the ink family on cream rather than jumping to cool ice-blue:
+         the Paper Hybrid palette is warmed (umber shadows, amber glow) and a
+         deep navy ring reads as "the line darkens as you focus" — native to
+         the page. Brand identity is already carried by the eyebrows + CTA. */
+      border-color: rgba(20, 32, 87, 0.22);
+    }
+    [data-theme="light"] #prinzipien .grid > div.rounded-2xl .border-b.hairline {
+      border-bottom-color: rgba(20, 32, 87, 0.08);
+    }
 
     /* Shared marker (drawn highlight on invoice values) — animation comes from .v1-marker-s1 / .v1-marker-s2 */
     .marker-underline {
@@ -631,7 +707,7 @@
     }
   </style>
 </head>
-<body class="bg-ink-0 text-gray-200 antialiased">
+<body class="bg-ink-0 text-fg-default antialiased">
 
   <!-- Skip to main content (a11y) -->
   <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
@@ -641,18 +717,22 @@
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex items-center justify-between h-16">
         <a href="#" class="flex items-center gap-2.5">
-          <img src="pentaflow%20logo.svg" alt="" aria-hidden="true" class="w-6 h-6 opacity-90">
-          <span class="font-display text-sm font-semibold tracking-tight" style="color:#D9D9D9">PentaFlow</span>
+          <span class="logo-mark" aria-hidden="true"></span>
+          <span class="font-display text-sm font-semibold tracking-tight logo-text">PentaFlow</span>
         </a>
         <!-- Desktop Nav -->
         <div class="hidden md:flex items-center gap-1 text-[11px] font-mono">
-          <a href="#kundenstimme" class="px-2.5 py-1.5 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Kundenstimme</a>
-          <a href="#prozess" class="px-2.5 py-1.5 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Prozess</a>
-          <a href="#ueber-uns" class="px-2.5 py-1.5 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Über uns</a>
-          <a href="#kontakt" class="ml-1 px-2.5 py-1.5 rounded border border-ice-500/40 bg-ice-500/10 text-ice-200 hover:bg-ice-500/20 hover:text-white transition-colors">Kontakt</a>
+          <a href="#kundenstimme" class="px-2.5 py-1.5 rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors">Kundenstimme</a>
+          <a href="#prozess" class="px-2.5 py-1.5 rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors">Prozess</a>
+          <a href="#ueber-uns" class="px-2.5 py-1.5 rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors">Über uns</a>
+          <button id="theme-toggle" type="button" class="ml-1 w-8 h-7 flex items-center justify-center rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors" aria-label="Theme umschalten" aria-pressed="false">
+            <svg class="theme-icon theme-icon-moon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg class="theme-icon theme-icon-sun" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          </button>
+          <a href="#kontakt" class="ml-1 px-2.5 py-1.5 rounded border border-ice-500/40 bg-ice-500/10 text-ice-200 hover:bg-ice-500/20 hover:text-fg-strong transition-colors">Kontakt</a>
         </div>
         <!-- Mobile Menu Button -->
-        <button id="mobile-menu-btn" class="md:hidden w-11 h-11 flex items-center justify-center text-gray-400 hover:text-white" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
+        <button id="mobile-menu-btn" class="md:hidden w-11 h-11 flex items-center justify-center text-fg-muted hover:text-fg-strong" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
           <svg id="mobile-menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
@@ -665,10 +745,18 @@
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden md:hidden border-t hairline bg-ink-0/95 nav-blur">
       <div class="px-4 py-4 space-y-2 text-[11px] font-mono">
-        <a href="#kundenstimme" class="block px-3 py-3.5 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Kundenstimme</a>
-        <a href="#prozess" class="block px-3 py-3.5 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Prozess</a>
-        <a href="#ueber-uns" class="block px-3 py-3.5 rounded border hairline text-gray-400 hover:border-ice-500/40 hover:text-white transition-colors">Über uns</a>
-        <a href="#kontakt" class="block px-3 py-3.5 rounded border border-ice-500/40 bg-ice-500/10 text-ice-200 hover:bg-ice-500/20 hover:text-white transition-colors">Kontakt →</a>
+        <a href="#kundenstimme" class="block px-3 py-3.5 rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors">Kundenstimme</a>
+        <a href="#prozess" class="block px-3 py-3.5 rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors">Prozess</a>
+        <a href="#ueber-uns" class="block px-3 py-3.5 rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors">Über uns</a>
+        <button id="theme-toggle-mobile" type="button" class="w-full flex items-center justify-between px-3 py-3.5 rounded border hairline text-fg-muted hover:border-ice-500/40 hover:text-fg-strong transition-colors" aria-label="Theme umschalten" aria-pressed="false">
+          <span class="theme-icon-label-dark">Light Mode</span>
+          <span class="theme-icon-label-light">Dark Mode</span>
+          <span class="flex items-center justify-center">
+            <svg class="theme-icon theme-icon-moon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg class="theme-icon theme-icon-sun" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          </span>
+        </button>
+        <a href="#kontakt" class="block px-3 py-3.5 rounded border border-ice-500/40 bg-ice-500/10 text-ice-200 hover:bg-ice-500/20 hover:text-fg-strong transition-colors">Kontakt →</a>
       </div>
     </div>
   </nav>
@@ -679,16 +767,16 @@
       <div class="max-w-7xl mx-auto px-6">
 
         <div class="mb-10 max-w-3xl">
-          <div data-personalize="hero-badge" class="inline-flex items-center gap-2 px-3 py-1 mb-8 text-xs font-medium text-ice-400 bg-ice-500/10 border border-ice-500/30 rounded-full">
+          <div data-personalize="hero-badge" class="inline-flex items-center gap-2 px-3 py-1 mb-8 text-xs font-medium text-ice-400 bg-ice-500/10 border border-ice-500/30 rounded-full whitespace-nowrap">
             <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
             Zwei Agenten live
           </div>
-          <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-[1.05] mb-6">
+          <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-fg-strong tracking-tight leading-[1.05] mb-6">
             KI-Agenten für<br>
-            <span class="text-gray-400">PSIpenta.</span>
+            <span class="text-fg-muted">PSIpenta.</span>
           </h1>
-          <p class="text-base md:text-lg text-gray-400 leading-relaxed max-w-2xl">
-            Unsere Agenten verstehen Ihre Dokumente, prüfen sie und buchen sie direkt ins <strong class="text-gray-200 font-semibold">PSIpenta ERP</strong> — Abweichungen werden zur Prüfung markiert.
+          <p class="text-base md:text-lg text-fg-muted leading-relaxed max-w-2xl">
+            Unsere Agenten verstehen Ihre Dokumente, prüfen sie und buchen sie direkt ins <strong class="text-fg-default font-semibold">PSIpenta ERP</strong> — Abweichungen werden zur Prüfung markiert.
           </p>
         </div>
 
@@ -706,7 +794,7 @@
               <div class="relative w-full max-w-[480px] mx-auto md:mx-0">
 
                 <!-- Invoice card -->
-                <div class="bg-white text-slate-900 rounded-lg shadow-[0_30px_80px_-20px_rgba(0,31,84,0.7)] ring-1 ring-white/10 overflow-hidden">
+                <div class="bg-white text-slate-900 rounded-lg shadow-stage-paper ring-1 ring-fg-strong/10 overflow-hidden">
                   <div class="px-7 pt-7 pb-5 border-b border-slate-200">
                     <div class="flex items-start justify-between">
                       <div>
@@ -766,32 +854,32 @@
                 </div>
 
                 <!-- Confidence badge — anchored to invoice card's top-right corner -->
-                <div class="hidden md:flex v1-confidence absolute z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-ink-3/95 backdrop-blur border border-ice-500/30 text-[11px] shadow-lg shadow-black/40" style="top:-14px;right:-12px">
+                <div class="demo-card hidden md:flex v1-confidence absolute z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-ink-3/95 backdrop-blur border border-ice-500/30 text-[11px] shadow-stage-chip" style="top:-14px;right:-12px">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                   <span class="font-mono text-ice-300">98.7% extraction confidence</span>
                 </div>
 
                 <!-- Combined chip 1: Lieferant + UID validiert (step 1) -->
                 <div class="v1-chip-s1 hidden md:block absolute z-10" style="top:64px;left:-44px">
-                  <div class="px-3 py-2.5 rounded-md bg-ink-3/90 backdrop-blur border border-emerald-500/30 text-[11px] min-w-[210px] shadow-xl shadow-black/40 space-y-1">
+                  <div class="demo-card px-3 py-2.5 rounded-md bg-ink-3/90 backdrop-blur border border-emerald-500/30 text-[11px] min-w-[210px] shadow-stage-chip space-y-1">
                     <div class="flex items-center gap-2">
                       <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                      <span class="text-gray-400 font-mono text-[11px] md:text-[10px] uppercase tracking-wider">Lieferant + UID validiert</span>
+                      <span class="text-fg-muted font-mono text-[11px] md:text-[10px] uppercase tracking-wider">Lieferant + UID validiert</span>
                     </div>
-                    <div class="text-white">Muster Stahltechnik GmbH</div>
-                    <div class="font-mono text-[11px] md:text-[10px] text-gray-300">ATU45678901 <span class="text-emerald-400">· EU VIES ✓</span></div>
+                    <div class="text-fg-strong">Muster Stahltechnik GmbH</div>
+                    <div class="font-mono text-[11px] md:text-[10px] text-fg-default">ATU45678901 <span class="text-emerald-400">· EU VIES ✓</span></div>
                   </div>
                 </div>
 
                 <!-- Combined chip 2: Bestellung + Betrag (step 2) -->
                 <div class="v1-chip-s2 hidden md:block absolute z-10" style="bottom:60px;right:-32px">
-                  <div class="px-3 py-2.5 rounded-md bg-ink-3/90 backdrop-blur border border-ice-500/30 text-[11px] min-w-[220px] shadow-xl shadow-black/40 space-y-1">
+                  <div class="demo-card px-3 py-2.5 rounded-md bg-ink-3/90 backdrop-blur border border-ice-500/30 text-[11px] min-w-[220px] shadow-stage-chip space-y-1">
                     <div class="flex items-center gap-2">
                       <svg class="w-3.5 h-3.5 text-ice-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
-                      <span class="text-gray-400 font-mono text-[11px] md:text-[10px] uppercase tracking-wider">Bestellung + Betrag abgeglichen</span>
+                      <span class="text-fg-muted font-mono text-[11px] md:text-[10px] uppercase tracking-wider">Bestellung + Betrag abgeglichen</span>
                     </div>
-                    <div class="text-white">PEKK <span class="font-mono text-ice-300">205380</span></div>
-                    <div class="font-mono text-[11px] md:text-[10px] text-gray-300">4.281,60 € <span class="text-emerald-400">· Match ✓</span></div>
+                    <div class="text-fg-strong">PEKK <span class="font-mono text-ice-300">205380</span></div>
+                    <div class="font-mono text-[11px] md:text-[10px] text-fg-default">4.281,60 € <span class="text-emerald-400">· Match ✓</span></div>
                   </div>
                 </div>
 
@@ -808,26 +896,26 @@
               <div class="relative w-full max-w-[300px]" style="height:58px">
                 <!-- Phase 1: reading invoice -->
                 <div class="bridge-phase bridge-phase-1 absolute inset-0 flex flex-col items-center justify-center gap-1">
-                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-ice-500/25 text-[11px] md:text-[10px] shadow-xl shadow-black/40">
+                  <div class="demo-card inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-ice-500/25 text-[11px] md:text-[10px] shadow-stage-chip">
                     <span class="w-1.5 h-1.5 rounded-full bg-ice-400 animate-pulse"></span>
                     <span class="font-mono uppercase tracking-wider text-ice-300">Rechnung wird gelesen</span>
                   </div>
                 </div>
                 <!-- Phase 2a: supplier + UID validated -->
                 <div class="bridge-phase bridge-phase-2a absolute inset-0 flex flex-col items-center justify-center gap-1">
-                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-emerald-500/30 text-[11px] md:text-[10px] shadow-xl shadow-black/40">
+                  <div class="demo-card inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-emerald-500/30 text-[11px] md:text-[10px] shadow-stage-chip">
                     <svg class="w-3 h-3 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    <span class="font-mono uppercase tracking-wider text-gray-300">Lieferant + UID validiert</span>
+                    <span class="font-mono uppercase tracking-wider text-fg-default">Lieferant + UID validiert</span>
                   </div>
-                  <div class="font-mono text-[11px] md:text-[9px] text-gray-400">ATU45678901 <span class="text-emerald-400">· EU VIES ✓</span></div>
+                  <div class="font-mono text-[11px] md:text-[9px] text-fg-muted">ATU45678901 <span class="text-emerald-400">· EU VIES ✓</span></div>
                 </div>
                 <!-- Phase 2b: Bestellung + Betrag -->
                 <div class="bridge-phase bridge-phase-2b absolute inset-0 flex flex-col items-center justify-center gap-1">
-                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-ice-500/30 text-[11px] md:text-[10px] shadow-xl shadow-black/40">
+                  <div class="demo-card inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-ink-3/95 backdrop-blur border border-ice-500/30 text-[11px] md:text-[10px] shadow-stage-chip">
                     <svg class="w-3 h-3 text-ice-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2"/></svg>
-                    <span class="font-mono uppercase tracking-wider text-gray-300">Bestellung + Betrag · Match</span>
+                    <span class="font-mono uppercase tracking-wider text-fg-default">Bestellung + Betrag · Match</span>
                   </div>
-                  <div class="font-mono text-[11px] md:text-[9px] text-gray-400">PEKK 205380 · 4.281,60 € <span class="text-emerald-400">✓</span></div>
+                  <div class="font-mono text-[11px] md:text-[9px] text-fg-muted">PEKK 205380 · 4.281,60 € <span class="text-emerald-400">✓</span></div>
                 </div>
                 <!-- Phase 3: climactic — written + confidence -->
                 <div class="bridge-phase bridge-phase-3 absolute inset-0 flex flex-col items-center justify-center gap-1.5">
@@ -867,14 +955,14 @@
 
             <!-- RIGHT: PSIpenta record (skeletons from t=0; SUPPLIER + UID first) -->
             <div class="md:col-span-5 relative flex items-center">
-              <div class="w-full rounded-xl border border-ice-500/20 bg-gradient-to-b from-ink-3 to-ink-2 shadow-[0_20px_60px_-15px_rgba(52,120,255,0.25)] overflow-hidden">
-                <div class="px-5 py-3 border-b border-white/5 flex items-center justify-between">
+              <div class="demo-card w-full rounded-xl border border-ice-500/20 bg-gradient-to-b from-ink-3 to-ink-2 shadow-stage-erp overflow-hidden">
+                <div class="px-5 py-3 border-b border-fg-strong/5 flex items-center justify-between">
                   <div class="flex items-center gap-2">
                     <div class="w-6 h-6 rounded bg-ice-500/10 border border-ice-500/30 flex items-center justify-center">
                       <svg class="w-3.5 h-3.5 text-ice-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 1.1.9 2 2 2h12a2 2 0 002-2V7M4 7l8-4 8 4M4 7l8 4 8-4"/></svg>
                     </div>
-                    <div class="text-xs font-semibold text-white">PSIpenta</div>
-                    <span class="font-mono text-[11px] md:text-[10px] text-gray-400">PREK / newRecord</span>
+                    <div class="text-xs font-semibold text-fg-strong">PSIpenta</div>
+                    <span class="font-mono text-[11px] md:text-[10px] text-fg-muted">PREK / newRecord</span>
                   </div>
                   <div class="flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -884,51 +972,51 @@
                 <div class="px-5 py-4 space-y-2.5 font-mono text-[11px]">
                   <!-- Step 1 fills: SUPPLIER, UID (top of card) -->
                   <div class="flex justify-between items-center">
-                    <span class="text-gray-400">SUPPLIER</span>
+                    <span class="text-fg-muted">SUPPLIER</span>
                     <span class="relative">
                       <span class="v1-skel-bg v1-skel-supplier" style="width:160px"></span>
-                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-white v1-fill-supplier"><span class="md:hidden">Stahltechnik GmbH</span><span class="hidden md:inline">Muster Stahltechnik GmbH</span></span>
+                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-fg-strong v1-fill-supplier"><span class="md:hidden">Stahltechnik GmbH</span><span class="hidden md:inline">Muster Stahltechnik GmbH</span></span>
                     </span>
                   </div>
                   <div class="flex justify-between items-center">
-                    <span class="text-gray-400">UID</span>
+                    <span class="text-fg-muted">UID</span>
                     <span class="relative">
                       <span class="v1-skel-bg v1-skel-uid" style="width:100px"></span>
-                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-white v1-fill-uid">ATU45678901</span>
+                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-fg-strong v1-fill-uid">ATU45678901</span>
                     </span>
                   </div>
                   <!-- Step 2 cascade: RECORD → ORDER_REF → AMOUNT_NET → AMOUNT_GROSS -->
                   <div class="flex justify-between items-center">
-                    <span class="text-gray-400">RECORD</span>
+                    <span class="text-fg-muted">RECORD</span>
                     <span class="relative">
                       <span class="v1-skel-bg v1-skel-record" style="width:90px"></span>
-                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-white v1-fill-record">PREK · 880012</span>
+                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-fg-strong v1-fill-record">PREK · 880012</span>
                     </span>
                   </div>
                   <div class="flex justify-between items-center">
-                    <span class="text-gray-400">ORDER_REF</span>
+                    <span class="text-fg-muted">ORDER_REF</span>
                     <span class="relative">
                       <span class="v1-skel-bg v1-skel-orderref" style="width:60px"></span>
                       <span class="absolute right-0 top-1/2 -translate-y-1/2 text-ice-300 v1-fill-orderref">205380</span>
                     </span>
                   </div>
                   <div class="flex justify-between items-center">
-                    <span class="text-gray-400">AMOUNT_NET</span>
+                    <span class="text-fg-muted">AMOUNT_NET</span>
                     <span class="relative">
                       <span class="v1-skel-bg v1-skel-amountnet" style="width:80px"></span>
-                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-white v1-fill-amountnet">3.568,00</span>
+                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-fg-strong v1-fill-amountnet">3.568,00</span>
                     </span>
                   </div>
                   <div class="flex justify-between items-center">
-                    <span class="text-gray-400">AMOUNT_GROSS</span>
+                    <span class="text-fg-muted">AMOUNT_GROSS</span>
                     <span class="relative">
                       <span class="v1-skel-bg v1-skel-amountgross" style="width:80px"></span>
-                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-white v1-fill-amountgross">4.281,60</span>
+                      <span class="absolute right-0 top-1/2 -translate-y-1/2 text-fg-strong v1-fill-amountgross">4.281,60</span>
                     </span>
                   </div>
                   <!-- Final reveal: STATUS (no skeleton — empty until climax) -->
-                  <div class="flex justify-between pt-2 border-t border-white/5">
-                    <span class="text-gray-400">STATUS</span>
+                  <div class="flex justify-between pt-2 border-t border-fg-strong/5">
+                    <span class="text-fg-muted">STATUS</span>
                     <span class="v1-fill-status flex items-center gap-1.5">
                       <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                       Automatisch gebucht
@@ -942,10 +1030,10 @@
 
           <!-- Bottom meta strip -->
           <div class="relative border-t hairline px-6 md:px-14 py-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-[11px] font-mono">
-            <div><span class="text-gray-400">Latency</span> <span class="text-gray-300">4.2s</span></div>
-            <div><span class="text-gray-400">Confidence</span> <span class="text-gray-300">98.7%</span></div>
-            <div><span class="text-gray-400">Extractor</span> <span class="text-gray-300"><span class="md:hidden">Gemini</span><span class="hidden md:inline">Gemini 2.5</span></span></div>
-            <div><span class="text-gray-400">Region</span> <span class="text-gray-300"><span class="md:hidden">Europe</span><span class="hidden md:inline">europe-west1</span></span></div>
+            <div><span class="text-fg-muted">Latency</span> <span class="text-fg-default">4.2s</span></div>
+            <div><span class="text-fg-muted">Confidence</span> <span class="text-fg-default">98.7%</span></div>
+            <div><span class="text-fg-muted">Extractor</span> <span class="text-fg-default"><span class="md:hidden">Gemini</span><span class="hidden md:inline">Gemini 2.5</span></span></div>
+            <div><span class="text-fg-muted">Region</span> <span class="text-fg-default"><span class="md:hidden">Europe</span><span class="hidden md:inline">europe-west1</span></span></div>
           </div>
         </div>
       </div>
@@ -956,11 +1044,11 @@
       <div class="max-w-7xl mx-auto px-6">
         <div class="mb-16 max-w-3xl">
           <p class="section-label mb-6">Warum PentaFlow</p>
-          <h2 class="font-display text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05] mb-6">
+          <h2 class="font-display text-3xl md:text-5xl font-semibold text-fg-strong tracking-tight leading-[1.05] mb-6">
             Kein Standardprodukt.<br>
-            <span class="text-gray-400">Ein Partner, der PSIpenta versteht.</span>
+            <span class="text-fg-muted">Ein Partner, der PSIpenta versteht.</span>
           </h2>
-          <p class="text-base md:text-lg text-gray-400 leading-relaxed max-w-2xl">
+          <p class="text-base md:text-lg text-fg-muted leading-relaxed max-w-2xl">
             Drei Prinzipien. Dafür stehen wir.
           </p>
         </div>
@@ -968,12 +1056,12 @@
         <div class="grid md:grid-cols-3 gap-5">
           <!-- PILLAR 1: Maßgeschneidert -->
           <div class="group relative rounded-2xl border hairline bg-ink-2 overflow-hidden hover:border-ice-500/30 transition-colors">
-            <div class="relative h-48 border-b hairline bg-gradient-to-b from-navy-900/40 to-transparent overflow-hidden">
+            <div class="relative h-48 border-b hairline bg-preview-tint overflow-hidden">
               <div class="absolute inset-0 bg-lattice opacity-50"></div>
               <div class="relative h-full flex items-center justify-center">
-                <div class="rounded-lg bg-ink-3 border border-white/10 shadow-2xl shadow-black/50 px-4 py-3 w-[78%]">
+                <div class="demo-card rounded-lg bg-ink-3 border border-fg-strong/10 shadow-stage-chip px-4 py-3 w-[78%]">
                   <div class="flex items-center justify-between mb-3">
-                    <div class="text-[11px] md:text-[10px] font-mono uppercase tracking-widest text-gray-400">agent.config</div>
+                    <div class="text-[11px] md:text-[10px] font-mono uppercase tracking-widest text-fg-muted">agent.config</div>
                     <div class="flex gap-1">
                       <span class="w-1.5 h-1.5 rounded-full bg-gray-700"></span>
                       <span class="w-1.5 h-1.5 rounded-full bg-gray-700"></span>
@@ -981,18 +1069,18 @@
                     </div>
                   </div>
                   <div class="space-y-1.5 font-mono text-[11px] md:text-[10px]">
-                    <div class="flex justify-between"><span class="text-gray-400">pipeline</span><span class="text-ice-300">invoices</span></div>
-                    <div class="flex justify-between"><span class="text-gray-400">vendor_rules</span><span class="text-white">24</span></div>
-                    <div class="flex justify-between"><span class="text-gray-400">erp_target</span><span class="text-white">psipenta</span></div>
-                    <div class="flex justify-between"><span class="text-gray-400">uid_check</span><span class="text-emerald-400">enabled</span></div>
+                    <div class="flex justify-between"><span class="text-fg-muted">pipeline</span><span class="text-ice-300">invoices</span></div>
+                    <div class="flex justify-between"><span class="text-fg-muted">vendor_rules</span><span class="text-fg-strong">24</span></div>
+                    <div class="flex justify-between"><span class="text-fg-muted">erp_target</span><span class="text-fg-strong">psipenta</span></div>
+                    <div class="flex justify-between"><span class="text-fg-muted">uid_check</span><span class="text-emerald-400">enabled</span></div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="p-6">
               <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-ice-400 mb-3">01 · Maßgeschneidert</div>
-              <h3 class="font-display text-xl font-semibold text-white mb-3">Nicht Standard.<br>Für Sie gebaut.</h3>
-              <p class="text-sm text-gray-400 leading-relaxed">
+              <h3 class="font-display text-xl font-semibold text-fg-strong mb-3">Nicht Standard.<br>Für Sie gebaut.</h3>
+              <p class="text-sm text-fg-muted leading-relaxed">
                 Kein Produkt von der Stange. Jeder Agent wird auf Ihre Dokumente, Lieferanten und Ihre PSIpenta-Konfiguration zugeschnitten. Vier Wochen bis zum Produktivbetrieb.
               </p>
             </div>
@@ -1000,12 +1088,12 @@
 
           <!-- PILLAR 2: Datenschutz -->
           <div class="group relative rounded-2xl border hairline bg-ink-2 overflow-hidden hover:border-ice-500/30 transition-colors">
-            <div class="relative h-48 border-b hairline bg-gradient-to-b from-navy-900/40 to-transparent overflow-hidden">
+            <div class="relative h-48 border-b hairline bg-preview-tint overflow-hidden">
               <div class="absolute inset-0 bg-lattice opacity-50"></div>
               <div class="relative h-full flex items-center justify-center p-6">
-                <div class="rounded-lg bg-ink-3 border border-white/10 shadow-2xl shadow-black/50 px-4 py-3 w-full">
+                <div class="demo-card rounded-lg bg-ink-3 border border-fg-strong/10 shadow-stage-chip px-4 py-3 w-full">
                   <div class="flex items-center justify-between mb-3">
-                    <div class="text-[11px] md:text-[10px] font-mono uppercase tracking-widest text-gray-400">data.location</div>
+                    <div class="text-[11px] md:text-[10px] font-mono uppercase tracking-widest text-fg-muted">data.location</div>
                     <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[11px] md:text-[9px] font-mono">
                       <span class="w-1 h-1 rounded-full bg-emerald-400"></span>
                       EU
@@ -1014,19 +1102,19 @@
                   <div class="space-y-1.5 font-mono text-[11px] md:text-[10px]">
                     <div class="flex items-center gap-1.5">
                       <svg class="w-3 h-3 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                      <span class="text-gray-300">EU-hosted</span>
+                      <span class="text-fg-default">EU-hosted</span>
                     </div>
                     <div class="flex items-center gap-1.5">
                       <svg class="w-3 h-3 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                      <span class="text-gray-300">On-prem / Managed</span>
+                      <span class="text-fg-default">On-prem / Managed</span>
                     </div>
                     <div class="flex items-center gap-1.5">
                       <svg class="w-3 h-3 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                      <span class="text-gray-300">Keine Daten an Dritte</span>
+                      <span class="text-fg-default">Keine Daten an Dritte</span>
                     </div>
                     <div class="flex items-center gap-1.5">
                       <svg class="w-3 h-3 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                      <span class="text-gray-300">Kein Modell-Training</span>
+                      <span class="text-fg-default">Kein Modell-Training</span>
                     </div>
                   </div>
                 </div>
@@ -1034,8 +1122,8 @@
             </div>
             <div class="p-6">
               <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-ice-400 mb-3">02 · Datenschutz</div>
-              <h3 class="font-display text-xl font-semibold text-white mb-3">Sicher.<br>Ihre Datenhoheit.</h3>
-              <p class="text-sm text-gray-400 leading-relaxed">
+              <h3 class="font-display text-xl font-semibold text-fg-strong mb-3">Sicher.<br>Ihre Datenhoheit.</h3>
+              <p class="text-sm text-fg-muted leading-relaxed">
                 Ihre Daten bleiben bei Ihnen. Hosting in der EU — on-prem oder Managed, Sie entscheiden. Nichts geht an Dritte. Nichts wird für Modelltraining verwendet.
               </p>
             </div>
@@ -1043,28 +1131,28 @@
 
           <!-- PILLAR 3: Human-in-the-Loop -->
           <div class="group relative rounded-2xl border hairline bg-ink-2 overflow-hidden hover:border-ice-500/30 transition-colors">
-            <div class="relative h-48 border-b hairline bg-gradient-to-b from-navy-900/40 to-transparent overflow-hidden">
+            <div class="relative h-48 border-b hairline bg-preview-tint overflow-hidden">
               <div class="absolute inset-0 bg-lattice opacity-50"></div>
               <div class="relative h-full flex items-center justify-center p-6">
-                <div class="rounded-lg bg-ink-3 border border-white/10 shadow-2xl shadow-black/50 w-full divide-y divide-white/5">
+                <div class="demo-card rounded-lg bg-ink-3 border border-fg-strong/10 shadow-stage-chip w-full divide-y divide-fg-strong/5">
                   <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px]">
                     <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    <span class="text-gray-400 font-mono truncate">205380 · Muster GmbH</span>
+                    <span class="text-fg-muted font-mono truncate">205380 · Muster GmbH</span>
                     <span class="ml-auto text-emerald-400 font-mono">gebucht</span>
                   </div>
                   <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px]">
                     <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    <span class="text-gray-400 font-mono truncate">205381 · Schmidt KG</span>
+                    <span class="text-fg-muted font-mono truncate">205381 · Schmidt KG</span>
                     <span class="ml-auto text-emerald-400 font-mono">gebucht</span>
                   </div>
                   <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px] bg-amber-500/5">
                     <svg class="w-3 h-3 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-                    <span class="text-white font-mono truncate">205382 · Prüfung</span>
+                    <span class="text-fg-strong font-mono truncate">205382 · Prüfung</span>
                     <span class="ml-auto text-amber-400 font-mono">±0,40 €</span>
                   </div>
                   <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px]">
                     <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    <span class="text-gray-400 font-mono truncate">205383 · Huber AG</span>
+                    <span class="text-fg-muted font-mono truncate">205383 · Huber AG</span>
                     <span class="ml-auto text-emerald-400 font-mono">gebucht</span>
                   </div>
                 </div>
@@ -1072,8 +1160,8 @@
             </div>
             <div class="p-6">
               <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-ice-400 mb-3">03 · Human-in-the-Loop</div>
-              <h3 class="font-display text-xl font-semibold text-white mb-3">Autonom.<br>Aber nie ohne Sie.</h3>
-              <p class="text-sm text-gray-400 leading-relaxed">
+              <h3 class="font-display text-xl font-semibold text-fg-strong mb-3">Autonom.<br>Aber nie ohne Sie.</h3>
+              <p class="text-sm text-fg-muted leading-relaxed">
                 Der Agent bucht nur, wenn alles stimmt. Preisabweichungen, fehlende Zuordnungen, ungewöhnliche UIDs landen automatisch in Ihrem Prüfpostfach. Die letzte Entscheidung bleibt Ihre.
               </p>
             </div>
@@ -1087,9 +1175,9 @@
       <div class="max-w-7xl mx-auto px-6">
         <div class="mb-10 max-w-3xl">
           <p class="section-label mb-6">Kundenstimme</p>
-          <h2 class="font-display text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05] mb-6">
+          <h2 class="font-display text-3xl md:text-5xl font-semibold text-fg-strong tracking-tight leading-[1.05] mb-6">
             2 Vollzeitstellen automatisiert.<br>
-            <span class="text-gray-400">Das sagt der CEO dazu.</span>
+            <span class="text-fg-muted">Das sagt der CEO dazu.</span>
           </h2>
         </div>
 
@@ -1099,15 +1187,15 @@
             <span class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-ice-500/12 border border-ice-500/30 text-ice-200">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
               Eingangsrechnungen
-              <span class="text-gray-400 ml-1">→&nbsp;PREK/PREP</span>
+              <span class="text-fg-muted ml-1">→&nbsp;PREK/PREP</span>
             </span>
-            <span class="flex items-center gap-2 px-3 py-1.5 text-gray-400">
+            <span class="flex items-center gap-2 px-3 py-1.5 text-fg-muted">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
               Bestellbestätigungen
-              <span class="text-gray-400 ml-1">→&nbsp;PEKK&nbsp;/&nbsp;PEKP</span>
+              <span class="text-fg-muted ml-1">→&nbsp;PEKK&nbsp;/&nbsp;PEKP</span>
             </span>
           </div>
-          <span class="text-[11px] md:text-[10px] font-mono uppercase tracking-widest text-gray-400">Zwei Pipelines · beide live bei Seisenbacher</span>
+          <span class="text-[11px] md:text-[10px] font-mono uppercase tracking-widest text-fg-muted">Zwei Pipelines · beide live bei Seisenbacher</span>
         </div>
 
         <figure class="relative max-w-5xl mx-auto rounded-2xl border hairline-strong overflow-hidden bg-ink-2">
@@ -1117,7 +1205,7 @@
                 <path d="M6.5 10c-1.933 0-3.5 1.567-3.5 3.5S4.567 17 6.5 17c.308 0 .606-.04.891-.115-.313 1.168-1.125 2.223-2.391 3.115l1 1.5C8.667 20 11 17.5 11 13.5c0-1.933-.567-3.5-4.5-3.5zm10 0c-1.933 0-3.5 1.567-3.5 3.5s1.567 3.5 3.5 3.5c.308 0 .606-.04.891-.115-.313 1.168-1.125 2.223-2.391 3.115l1 1.5C18.667 20 21 17.5 21 13.5c0-1.933-.567-3.5-4.5-3.5z"/>
               </svg>
               <blockquote class="relative pt-6">
-                <p class="font-display text-lg md:text-2xl font-medium text-white leading-[1.4] tracking-tight">
+                <p class="font-display text-lg md:text-2xl font-medium text-fg-strong leading-[1.4] tracking-tight">
                   „Uns war wichtig, dass KI bei uns nicht nur funktioniert, sondern dass wir die Kontrolle behalten. PentaFlow liest unsere Eingangs&shy;rechnungen und Bestell&shy;bestätigungen direkt aus dem Postfach ins PSI&nbsp;Penta — und markiert zuverlässig, was geprüft werden muss. In vier Wochen waren wir produktiv."
                 </p>
               </blockquote>
@@ -1132,27 +1220,27 @@
                          loading="lazy" width="512" height="512">
                   </picture>
                   <div>
-                    <div class="font-display text-xl font-semibold text-white">Christian Forstner</div>
-                    <div class="text-sm text-gray-400 mt-1">CEO</div>
+                    <div class="font-display text-xl font-semibold text-fg-strong">Christian Forstner</div>
+                    <div class="text-sm text-fg-muted mt-1">CEO</div>
                   </div>
                 </div>
                 <div class="mt-6 pt-4 border-t hairline">
-                  <div class="font-display font-bold text-white text-sm tracking-[0.18em]">SEISENBACHER</div>
-                  <div class="text-[11px] text-gray-400 mt-1">Schienenfahrzeugausstattung</div>
-                  <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-1">Österreich</div>
+                  <div class="font-display font-bold text-fg-strong text-sm tracking-[0.18em]">SEISENBACHER</div>
+                  <div class="text-[11px] text-fg-muted mt-1">Schienenfahrzeugausstattung</div>
+                  <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-fg-muted mt-1">Österreich</div>
                 </div>
               </div>
               <div class="pt-4 border-t hairline space-y-2 font-mono text-[11px]">
                 <div class="flex items-center justify-between">
-                  <span class="text-gray-400 uppercase tracking-widest text-[11px] md:text-[10px]">Rechnungen/Mt.</span>
-                  <span class="text-white">1.700+</span>
+                  <span class="text-fg-muted uppercase tracking-widest text-[11px] md:text-[10px]">Rechnungen/Mt.</span>
+                  <span class="text-fg-strong">1.700+</span>
                 </div>
                 <div class="flex items-center justify-between">
-                  <span class="text-gray-400 uppercase tracking-widest text-[11px] md:text-[10px]">Bestellbest./Mt.</span>
-                  <span class="text-white">1.500+</span>
+                  <span class="text-fg-muted uppercase tracking-widest text-[11px] md:text-[10px]">Bestellbest./Mt.</span>
+                  <span class="text-fg-strong">1.500+</span>
                 </div>
                 <div class="flex items-center justify-between">
-                  <span class="text-gray-400 uppercase tracking-widest text-[11px] md:text-[10px]">Live seit</span>
+                  <span class="text-fg-muted uppercase tracking-widest text-[11px] md:text-[10px]">Live seit</span>
                   <span class="text-emerald-400 flex items-center gap-1.5">
                     <span class="w-1 h-1 rounded-full bg-emerald-400 animate-pulse"></span>2025
                   </span>
@@ -1169,11 +1257,11 @@
       <div class="max-w-7xl mx-auto px-6">
         <div class="mb-16 max-w-3xl">
           <p class="section-label mb-6">Wie es funktioniert</p>
-          <h2 class="font-display text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05] mb-6">
+          <h2 class="font-display text-3xl md:text-5xl font-semibold text-fg-strong tracking-tight leading-[1.05] mb-6">
             Drei Schritte.<br>
-            <span class="text-gray-400">Kein Umweg.</span>
+            <span class="text-fg-muted">Kein Umweg.</span>
           </h2>
-          <p class="text-base md:text-lg text-gray-400 leading-relaxed max-w-2xl">
+          <p class="text-base md:text-lg text-fg-muted leading-relaxed max-w-2xl">
             Postfach, Agent, ERP. Kein zweites System, keine Export-Import-Schleife. Der Agent ist wie ein zusätzlicher Mitarbeiter — nur schneller, rund um die Uhr.
           </p>
         </div>
@@ -1181,32 +1269,32 @@
         <div class="flex flex-col md:flex-row md:items-stretch gap-5">
           <!-- Step 01 · Inbox mockup -->
           <div class="md:flex-1 relative rounded-2xl border hairline bg-ink-2 overflow-hidden hover:border-ice-500/30 transition-colors">
-            <div class="relative h-40 border-b hairline bg-gradient-to-b from-navy-900/30 to-transparent overflow-hidden">
+            <div class="relative h-40 border-b hairline bg-preview-tint overflow-hidden">
               <div class="absolute inset-0 bg-lattice opacity-40"></div>
               <div class="relative h-full flex items-end p-4">
-                <div class="w-full rounded-md bg-ink-3 border border-white/10 shadow-xl shadow-black/40 divide-y divide-white/5">
+                <div class="demo-card w-full rounded-md bg-ink-3 border border-fg-strong/10 shadow-stage-chip divide-y divide-fg-strong/5">
                   <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px]">
-                    <svg class="w-3 h-3 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75A2.25 2.25 0 014.5 4.5h15a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75z"/></svg>
-                    <span class="text-gray-400 truncate flex-1 font-mono">schmidt-kg@...</span>
-                    <span class="text-gray-400 font-mono">14:28</span>
+                    <svg class="w-3 h-3 text-fg-muted shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75A2.25 2.25 0 014.5 4.5h15a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75z"/></svg>
+                    <span class="text-fg-muted truncate flex-1 font-mono">schmidt-kg@...</span>
+                    <span class="text-fg-muted font-mono">14:28</span>
                   </div>
                   <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px] bg-ice-500/5">
                     <span class="w-1.5 h-1.5 rounded-full bg-ice-400 shrink-0"></span>
-                    <span class="text-white truncate flex-1 font-mono">R-2025-08812 · Eingangsrechnung</span>
+                    <span class="text-fg-strong truncate flex-1 font-mono">R-2025-08812 · Eingangsrechnung</span>
                     <span class="text-ice-400 font-mono">NEW</span>
                   </div>
                   <div class="flex items-center gap-2 px-3 py-2 text-[11px] md:text-[10px]">
-                    <svg class="w-3 h-3 text-gray-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75A2.25 2.25 0 014.5 4.5h15a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75z"/></svg>
-                    <span class="text-gray-400 truncate flex-1 font-mono">AB-2025-0412 · Bestellbest.</span>
-                    <span class="text-gray-400 font-mono">14:32</span>
+                    <svg class="w-3 h-3 text-fg-muted shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75A2.25 2.25 0 014.5 4.5h15a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75z"/></svg>
+                    <span class="text-fg-muted truncate flex-1 font-mono">AB-2025-0412 · Bestellbest.</span>
+                    <span class="text-fg-muted font-mono">14:32</span>
                   </div>
                 </div>
               </div>
             </div>
             <div class="p-8">
-              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">01</div>
-              <h3 class="font-display text-xl font-semibold text-white mb-3">Postfach anbinden</h3>
-              <p class="text-sm text-gray-400 leading-relaxed">
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-fg-muted mb-3">01</div>
+              <h3 class="font-display text-xl font-semibold text-fg-strong mb-3">Postfach anbinden</h3>
+              <p class="text-sm text-fg-muted leading-relaxed">
                 OAuth über Microsoft&nbsp;365. Der Agent liest ausschließlich aus einem gemeinsamen Postfach oder Unterordner — read-only, bis Sie ihn freischalten.
               </p>
             </div>
@@ -1214,10 +1302,10 @@
 
           <!-- Step 02 · Extraction mockup -->
           <div class="md:flex-1 relative rounded-2xl border hairline bg-ink-2 overflow-hidden hover:border-ice-500/30 transition-colors">
-            <div class="relative h-40 border-b hairline bg-gradient-to-b from-navy-900/30 to-transparent overflow-hidden">
+            <div class="relative h-40 border-b hairline bg-preview-tint overflow-hidden">
               <div class="absolute inset-0 bg-lattice opacity-40"></div>
               <div class="relative h-full flex items-center justify-center gap-3 p-4">
-                <div class="w-16 h-20 rounded bg-white/95 flex flex-col gap-1 p-1.5 shadow-xl shadow-black/40">
+                <div class="w-16 h-20 rounded bg-white/95 flex flex-col gap-1 p-1.5 shadow-stage-chip">
                   <div class="h-0.5 bg-slate-300 w-3/4 rounded"></div>
                   <div class="h-0.5 bg-slate-300 w-1/2 rounded"></div>
                   <div class="h-0.5 bg-slate-300 w-2/3 rounded"></div>
@@ -1225,7 +1313,7 @@
                   <div class="mt-auto h-1 bg-slate-400 w-5/6 rounded"></div>
                 </div>
                 <svg class="w-4 h-4 text-ice-500/60 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-5-7l7 7-7 7"/></svg>
-                <div class="space-y-1">
+                <div class="demo-card space-y-1">
                   <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-ink-3 border border-emerald-500/30 text-[11px] md:text-[9px] font-mono text-emerald-400"><span>✓</span> UID</div>
                   <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-ink-3 border border-emerald-500/30 text-[11px] md:text-[9px] font-mono text-emerald-400"><span>✓</span> BESTELL</div>
                   <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-ink-3 border border-emerald-500/30 text-[11px] md:text-[9px] font-mono text-emerald-400"><span>✓</span> BETRAG</div>
@@ -1233,9 +1321,9 @@
               </div>
             </div>
             <div class="p-8">
-              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">02</div>
-              <h3 class="font-display text-xl font-semibold text-white mb-3">KI-Agent extrahiert</h3>
-              <p class="text-sm text-gray-400 leading-relaxed">
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-fg-muted mb-3">02</div>
+              <h3 class="font-display text-xl font-semibold text-fg-strong mb-3">KI-Agent extrahiert</h3>
+              <p class="text-sm text-fg-muted leading-relaxed">
                 Wahlweise Gemini, OpenAI oder Anthropic klassifiziert und extrahiert. Validierung inline: UID-Checksumme, Betragsmath, Positionen-Matching — bevor der Agent weitermacht.
               </p>
             </div>
@@ -1243,29 +1331,29 @@
 
           <!-- Step 03 · PSIpenta mockup -->
           <div class="md:flex-1 relative rounded-2xl border hairline bg-ink-2 overflow-hidden hover:border-ice-500/30 transition-colors">
-            <div class="relative h-40 border-b hairline bg-gradient-to-b from-navy-900/30 to-transparent overflow-hidden">
+            <div class="relative h-40 border-b hairline bg-preview-tint overflow-hidden">
               <div class="absolute inset-0 bg-lattice opacity-40"></div>
               <div class="relative h-full flex items-center justify-center p-4">
-                <div class="w-full max-w-[220px] rounded-md bg-ink-3 border border-ice-500/25 shadow-xl shadow-black/40">
-                  <div class="flex items-center justify-between px-3 py-1.5 border-b border-white/5">
-                    <span class="text-[11px] md:text-[10px] font-mono text-white">PSIpenta</span>
+                <div class="demo-card w-full max-w-[220px] rounded-md bg-ink-3 border border-ice-500/25 shadow-stage-chip">
+                  <div class="flex items-center justify-between px-3 py-1.5 border-b border-fg-strong/5">
+                    <span class="text-[11px] md:text-[10px] font-mono text-fg-strong">PSIpenta</span>
                     <span class="text-[11px] md:text-[9px] font-mono text-emerald-400 flex items-center gap-1">
                       <span class="w-1 h-1 rounded-full bg-emerald-400 animate-pulse"></span>LIVE
                     </span>
                   </div>
                   <div class="px-3 py-2 space-y-1 font-mono text-[11px] md:text-[9px]">
-                    <div class="flex justify-between"><span class="text-gray-400">PREK</span><span class="text-white">880012</span></div>
-                    <div class="flex justify-between"><span class="text-gray-400">ORDER</span><span class="text-ice-300">205380</span></div>
-                    <div class="flex justify-between"><span class="text-gray-400">BETRAG</span><span class="text-white">4.281,60</span></div>
-                    <div class="flex justify-between pt-1 border-t border-white/5"><span class="text-gray-400">STATUS</span><span class="text-emerald-400 flex items-center gap-1"><svg class="w-2 h-2" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>gebucht</span></div>
+                    <div class="flex justify-between"><span class="text-fg-muted">PREK</span><span class="text-fg-strong">880012</span></div>
+                    <div class="flex justify-between"><span class="text-fg-muted">ORDER</span><span class="text-ice-300">205380</span></div>
+                    <div class="flex justify-between"><span class="text-fg-muted">BETRAG</span><span class="text-fg-strong">4.281,60</span></div>
+                    <div class="flex justify-between pt-1 border-t border-fg-strong/5"><span class="text-fg-muted">STATUS</span><span class="text-emerald-400 flex items-center gap-1"><svg class="w-2 h-2" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>gebucht</span></div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="p-8">
-              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">03</div>
-              <h3 class="font-display text-xl font-semibold text-white mb-3">Direkt ins PSIpenta</h3>
-              <p class="text-sm text-gray-400 leading-relaxed">
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-fg-muted mb-3">03</div>
+              <h3 class="font-display text-xl font-semibold text-fg-strong mb-3">Direkt ins PSIpenta</h3>
+              <p class="text-sm text-fg-muted leading-relaxed">
                 REST-API-Buchung in PREK, PEKK oder PEKP — mit PDF-Beleg und Bestellverknüpfung. Abweichungen landen im Prüfpostfach, nicht im ERP.
               </p>
             </div>
@@ -1284,7 +1372,7 @@
         <div class="grid md:grid-cols-12 gap-10 md:gap-14 items-center max-w-6xl mx-auto">
           <!-- Portrait -->
           <div class="md:col-span-5">
-            <div class="relative rounded-2xl overflow-hidden border hairline-strong bg-ink-2 aspect-[4/5] shadow-[0_30px_60px_-20px_rgba(0,31,84,0.6)]">
+            <div class="relative rounded-2xl overflow-hidden border hairline-strong bg-ink-2 aspect-[4/5] shadow-portrait">
               <div class="absolute inset-0 bg-navy-glow opacity-40 pointer-events-none"></div>
               <picture>
                 <source srcset="jasper-castell.webp" type="image/webp">
@@ -1294,36 +1382,36 @@
             </div>
             <div class="mt-5 flex items-center justify-between">
               <div>
-                <div class="font-display font-semibold text-white">Jasper Castell</div>
-                <div class="text-sm text-gray-400">Gründer · Informatiker · Jurist</div>
+                <div class="font-display font-semibold text-fg-strong">Jasper Castell</div>
+                <div class="text-sm text-fg-muted">Gründer · Informatiker · Jurist</div>
               </div>
-              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400">Berlin</div>
+              <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-fg-muted">Berlin</div>
             </div>
           </div>
 
           <!-- Copy -->
           <div class="md:col-span-7">
-            <h2 class="font-display text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05] mb-8">
+            <h2 class="font-display text-3xl md:text-5xl font-semibold text-fg-strong tracking-tight leading-[1.05] mb-8">
               PSIpenta Expertise<br>
-              <span class="text-gray-400">trifft modernste KI.</span>
+              <span class="text-fg-muted">trifft modernste KI.</span>
             </h2>
-            <div class="space-y-5 text-base md:text-lg text-gray-400 leading-relaxed mb-10">
-              <p>PentaFlow AI ist ein spezialisiertes Beratungs- und Entwicklungsteam mit Standorten in Berlin und Wien. Wir verbinden tiefes Know-how in <strong class="text-gray-200">PSIpenta ERP</strong> mit Expertise in künstlicher Intelligenz, um Prozesse in der <strong class="text-gray-200">Fertigungsindustrie</strong> zu automatisieren, die bisher nur manuell möglich waren.</p>
-              <p>Unser Ansatz: Kein Standard-Produkt, sondern maßgeschneiderte <strong class="text-gray-200">PSIpenta KI-Agenten</strong>, die exakt auf Ihre Prozesse, Ihre Datenstrukturen und Ihre Anforderungen zugeschnitten sind — ob <strong class="text-gray-200">Maschinenbau</strong>, Automotive oder andere Bereiche der Fertigungsindustrie. Wir sind Ihr Partner für die intelligente Automatisierung Ihrer PSIpenta-Umgebung.</p>
+            <div class="space-y-5 text-base md:text-lg text-fg-muted leading-relaxed mb-10">
+              <p>PentaFlow AI ist ein spezialisiertes Beratungs- und Entwicklungsteam mit Standorten in Berlin und Wien. Wir verbinden tiefes Know-how in <strong class="text-fg-default">PSIpenta ERP</strong> mit Expertise in künstlicher Intelligenz, um Prozesse in der <strong class="text-fg-default">Fertigungsindustrie</strong> zu automatisieren, die bisher nur manuell möglich waren.</p>
+              <p>Unser Ansatz: Kein Standard-Produkt, sondern maßgeschneiderte <strong class="text-fg-default">PSIpenta KI-Agenten</strong>, die exakt auf Ihre Prozesse, Ihre Datenstrukturen und Ihre Anforderungen zugeschnitten sind — ob <strong class="text-fg-default">Maschinenbau</strong>, Automotive oder andere Bereiche der Fertigungsindustrie. Wir sind Ihr Partner für die intelligente Automatisierung Ihrer PSIpenta-Umgebung.</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-4 pt-6 border-t hairline">
               <div>
-                <div class="font-display text-xl md:text-2xl font-semibold text-white leading-tight">Berlin&nbsp;&amp;&nbsp;Wien</div>
-                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-2">Standorte</div>
+                <div class="font-display text-xl md:text-2xl font-semibold text-fg-strong leading-tight">Berlin&nbsp;&amp;&nbsp;Wien</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-fg-muted mt-2">Standorte</div>
               </div>
               <div>
-                <div class="font-display text-xl md:text-2xl font-semibold text-white leading-tight">100%</div>
-                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-2">PSIpenta Fokus</div>
+                <div class="font-display text-xl md:text-2xl font-semibold text-fg-strong leading-tight">100%</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-fg-muted mt-2">PSIpenta Fokus</div>
               </div>
               <div>
-                <div class="font-display text-xl md:text-2xl font-semibold text-white leading-tight">24/7</div>
-                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-2">Agent-Verfügbarkeit</div>
+                <div class="font-display text-xl md:text-2xl font-semibold text-fg-strong leading-tight">24/7</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-fg-muted mt-2">Agent-Verfügbarkeit</div>
               </div>
             </div>
           </div>
@@ -1336,58 +1424,58 @@
       <div class="max-w-7xl mx-auto px-6">
         <div class="mb-16 max-w-3xl">
           <p class="section-label mb-6">Impact</p>
-          <h2 class="font-display text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05] mb-6">
-            Spürbare Verbesserung. <span class="text-gray-400">Kein Marketing&shy;versprechen.</span>
+          <h2 class="font-display text-3xl md:text-5xl font-semibold text-fg-strong tracking-tight leading-[1.05] mb-6">
+            Spürbare Verbesserung. <span class="text-fg-muted">Kein Marketing&shy;versprechen.</span>
           </h2>
-          <p class="text-base md:text-lg text-gray-400 leading-relaxed max-w-2xl">
-            Was bei <span class="text-gray-200 font-medium">Seisenbacher</span> aktuell monatlich durch PentaFlow läuft.
+          <p class="text-base md:text-lg text-fg-muted leading-relaxed max-w-2xl">
+            Was bei <span class="text-fg-default font-medium">Seisenbacher</span> aktuell monatlich durch PentaFlow läuft.
           </p>
         </div>
 
         <div class="rounded-2xl border hairline overflow-hidden bg-ink-2">
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 divide-y sm:divide-x md:divide-y-0 divide-white/5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 divide-y sm:divide-x md:divide-y-0 divide-fg-strong/5">
             <div class="p-8 md:p-10 flex flex-col justify-between min-h-[180px]">
               <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Rechnungen</div>
               <div>
-                <div class="font-display text-4xl md:text-6xl font-semibold text-white tracking-tight leading-none mt-6">
+                <div class="font-display text-4xl md:text-6xl font-semibold text-fg-strong tracking-tight leading-none mt-6">
                   1.700<span class="text-ice-500">+</span>
                 </div>
-                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-3">pro&nbsp;Monat</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-fg-muted mt-3">pro&nbsp;Monat</div>
               </div>
             </div>
 
             <div class="p-8 md:p-10 flex flex-col justify-between min-h-[180px]">
               <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Bestellbestätigungen</div>
               <div>
-                <div class="font-display text-4xl md:text-6xl font-semibold text-white tracking-tight leading-none mt-6">
+                <div class="font-display text-4xl md:text-6xl font-semibold text-fg-strong tracking-tight leading-none mt-6">
                   1.500<span class="text-ice-500">+</span>
                 </div>
-                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-3">pro&nbsp;Monat</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-fg-muted mt-3">pro&nbsp;Monat</div>
               </div>
             </div>
 
             <div class="p-8 md:p-10 flex flex-col justify-between min-h-[180px]">
               <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Automatisiert</div>
               <div>
-                <div class="font-display text-4xl md:text-6xl font-semibold text-white tracking-tight leading-none mt-6">
+                <div class="font-display text-4xl md:text-6xl font-semibold text-fg-strong tracking-tight leading-none mt-6">
                   2
                 </div>
-                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-3">Vollzeitstellen</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-fg-muted mt-3">Vollzeitstellen</div>
               </div>
             </div>
 
             <div class="p-8 md:p-10 flex flex-col justify-between min-h-[180px]">
               <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-[0.2em] text-ice-400 mb-auto">Pilotbetrieb</div>
               <div>
-                <div class="font-display text-4xl md:text-6xl font-semibold text-white tracking-tight leading-none mt-6">
+                <div class="font-display text-4xl md:text-6xl font-semibold text-fg-strong tracking-tight leading-none mt-6">
                   4
                 </div>
-                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 mt-3">Wochen&nbsp;bis&nbsp;live</div>
+                <div class="font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-fg-muted mt-3">Wochen&nbsp;bis&nbsp;live</div>
               </div>
             </div>
           </div>
 
-          <div class="border-t hairline px-6 md:px-10 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 font-mono text-[11px] md:text-[10px] text-gray-400">
+          <div class="border-t hairline px-6 md:px-10 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 font-mono text-[11px] md:text-[10px] text-fg-muted">
             <div class="flex items-center gap-3">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               <span class="uppercase tracking-widest">Live seit 2025 · Seisenbacher GmbH</span>
@@ -1403,108 +1491,108 @@
       <div class="max-w-7xl mx-auto px-6">
         <div class="mb-16 max-w-3xl">
           <p class="section-label mb-6">Häufige Fragen</p>
-          <h2 class="font-display text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05]">
+          <h2 class="font-display text-3xl md:text-5xl font-semibold text-fg-strong tracking-tight leading-[1.05]">
             Klartext<br>
-            <span class="text-gray-400">vor dem Pilot.</span>
+            <span class="text-fg-muted">vor dem Pilot.</span>
           </h2>
         </div>
 
         <div class="space-y-4 max-w-3xl mx-auto">
           <!-- FAQ · Gibt es KI-Agenten für PSI Penta? -->
-          <details open class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+          <details open class="group rounded-2xl border border-fg-strong/10 bg-fg-strong/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-fg-strong font-medium text-base select-none">
               Gibt es KI-Agenten speziell für PSI&nbsp;Penta?
-              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              <svg class="w-5 h-5 text-fg-muted group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             </summary>
-            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
-              Ja. <strong class="text-gray-300">PentaFlow AI</strong> entwickelt autonome KI-Agenten, die direkt über die PSI-Penta-REST-API lesen und schreiben. Zwei Agenten sind aktuell produktiv im Einsatz: ein <strong class="text-gray-300">Eingangsrechnungs-Agent</strong> (PREK/PREP) und ein <strong class="text-gray-300">Bestellbestätigungs-Agent</strong> (PEKK/PEKP). Weitere Prozesse lassen sich auf derselben Agenten-Architektur aufbauen.
+            <div class="px-6 pb-5 text-sm text-fg-muted leading-relaxed">
+              Ja. <strong class="text-fg-default">PentaFlow AI</strong> entwickelt autonome KI-Agenten, die direkt über die PSI-Penta-REST-API lesen und schreiben. Zwei Agenten sind aktuell produktiv im Einsatz: ein <strong class="text-fg-default">Eingangsrechnungs-Agent</strong> (PREK/PREP) und ein <strong class="text-fg-default">Bestellbestätigungs-Agent</strong> (PEKK/PEKP). Weitere Prozesse lassen sich auf derselben Agenten-Architektur aufbauen.
             </div>
           </details>
 
           <!-- FAQ · Referenzkunde -->
-          <details class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+          <details class="group rounded-2xl border border-fg-strong/10 bg-fg-strong/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-fg-strong font-medium text-base select-none">
               Wer hat KI-Agenten in PSI&nbsp;Penta produktiv im Einsatz?
-              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              <svg class="w-5 h-5 text-fg-muted group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             </summary>
-            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
-              Die <strong class="text-gray-300">Seisenbacher&nbsp;GmbH</strong> (Schienenfahrzeugausstattung, Österreich) setzt PentaFlow-Agenten seit <strong class="text-gray-300">2025</strong> produktiv ein — aktuell über <strong class="text-gray-300">1.700 Eingangsrechnungen</strong> und <strong class="text-gray-300">1.500 Bestellbestätigungen pro Monat</strong>, beide vollautomatisch direkt ins PSI&nbsp;Penta gebucht.
+            <div class="px-6 pb-5 text-sm text-fg-muted leading-relaxed">
+              Die <strong class="text-fg-default">Seisenbacher&nbsp;GmbH</strong> (Schienenfahrzeugausstattung, Österreich) setzt PentaFlow-Agenten seit <strong class="text-fg-default">2025</strong> produktiv ein — aktuell über <strong class="text-fg-default">1.700 Eingangsrechnungen</strong> und <strong class="text-fg-default">1.500 Bestellbestätigungen pro Monat</strong>, beide vollautomatisch direkt ins PSI&nbsp;Penta gebucht.
             </div>
           </details>
 
           <!-- FAQ · KI-Agent vs. OCR/RPA -->
-          <details class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+          <details class="group rounded-2xl border border-fg-strong/10 bg-fg-strong/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-fg-strong font-medium text-base select-none">
               Wie unterscheidet sich ein KI-Agent von klassischem OCR oder RPA für PSI&nbsp;Penta?
-              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              <svg class="w-5 h-5 text-fg-muted group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             </summary>
-            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
-              Klassisches OCR liest nur Text, RPA klickt durch die Oberfläche — beide scheitern an Abweichungen, Freitextfeldern und unstrukturierten Dokumenten. Ein KI-Agent versteht den Inhalt eines Dokuments im Kontext (Lieferant, Bestellung, Betragsmath), validiert gegen PSI-Penta-Stammdaten und entscheidet, ob direkt gebucht oder zur manuellen Prüfung eskaliert wird. Die Agenten-Architektur ist modell-agnostisch und nutzt <strong class="text-gray-300">Gemini&nbsp;2.5</strong>, OpenAI oder Anthropic.
+            <div class="px-6 pb-5 text-sm text-fg-muted leading-relaxed">
+              Klassisches OCR liest nur Text, RPA klickt durch die Oberfläche — beide scheitern an Abweichungen, Freitextfeldern und unstrukturierten Dokumenten. Ein KI-Agent versteht den Inhalt eines Dokuments im Kontext (Lieferant, Bestellung, Betragsmath), validiert gegen PSI-Penta-Stammdaten und entscheidet, ob direkt gebucht oder zur manuellen Prüfung eskaliert wird. Die Agenten-Architektur ist modell-agnostisch und nutzt <strong class="text-fg-default">Gemini&nbsp;2.5</strong>, OpenAI oder Anthropic.
             </div>
           </details>
 
           <!-- FAQ 1 · ERP-agnostisch -->
-          <details class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+          <details class="group rounded-2xl border border-fg-strong/10 bg-fg-strong/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-fg-strong font-medium text-base select-none">
               Können Sie auch mit anderen ERP-Systemen arbeiten als PSI Penta?
-              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              <svg class="w-5 h-5 text-fg-muted group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             </summary>
-            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
+            <div class="px-6 pb-5 text-sm text-fg-muted leading-relaxed">
               Ja. Unsere Agenten-Architektur ist ERP-agnostisch: Dokumenten&shy;klassifikation, KI-Extraktion und Validierung bleiben identisch — nur die Schnittstelle ins Ziel-ERP ändert sich. Wir haben uns auf PSI&nbsp;Penta spezialisiert, weil wir dort den tiefsten fachlichen Kontext haben, aber jeder ERP mit REST- oder SOAP-Schnittstelle lässt sich anbinden.
             </div>
           </details>
 
           <!-- FAQ 2 · Scope der Automatisierung -->
-          <details class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+          <details class="group rounded-2xl border border-fg-strong/10 bg-fg-strong/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-fg-strong font-medium text-base select-none">
               Welche PSIpenta-Prozesse können Sie automatisieren?
-              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              <svg class="w-5 h-5 text-fg-muted group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             </summary>
-            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
-              Grundsätzlich jeden administrativen Prozess, bei dem jemand Daten in PSI&nbsp;Penta einträgt oder ausliest — Eingangsrechnungen, Bestellbestätigungen, Lieferscheine, Stammdatenpflege, Reporting. Die PSIpenta-REST-API ist unser direkter Zugang: Agenten lesen und schreiben wie ein zusätzlicher Mitarbeiter. Zusätzlich bauen wir maßgeschneiderte <strong class="text-gray-300">Analytics-Dashboards</strong>, die PSIpenta-Daten sichtbar machen, die sonst in Reports verborgen bleiben.
+            <div class="px-6 pb-5 text-sm text-fg-muted leading-relaxed">
+              Grundsätzlich jeden administrativen Prozess, bei dem jemand Daten in PSI&nbsp;Penta einträgt oder ausliest — Eingangsrechnungen, Bestellbestätigungen, Lieferscheine, Stammdatenpflege, Reporting. Die PSIpenta-REST-API ist unser direkter Zugang: Agenten lesen und schreiben wie ein zusätzlicher Mitarbeiter. Zusätzlich bauen wir maßgeschneiderte <strong class="text-fg-default">Analytics-Dashboards</strong>, die PSIpenta-Daten sichtbar machen, die sonst in Reports verborgen bleiben.
             </div>
           </details>
 
           <!-- FAQ 3 · Model-agnostic -->
-          <details class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+          <details class="group rounded-2xl border border-fg-strong/10 bg-fg-strong/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-fg-strong font-medium text-base select-none">
               Welches KI-Modell setzen Sie ein?
-              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              <svg class="w-5 h-5 text-fg-muted group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             </summary>
-            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
-              Standard ist <strong class="text-gray-300">Gemini&nbsp;2.5</strong> auf Vertex&nbsp;AI (EU-gehostet). Die Agenten-Architektur ist <strong class="text-gray-300">modell-agnostisch</strong>: OpenAI, Anthropic, Mistral oder lokale Open-Source-Modelle lassen sich genauso einbinden. Welches Modell passt, entscheiden IT-Compliance und Use-Case — nicht wir.
+            <div class="px-6 pb-5 text-sm text-fg-muted leading-relaxed">
+              Standard ist <strong class="text-fg-default">Gemini&nbsp;2.5</strong> auf Vertex&nbsp;AI (EU-gehostet). Die Agenten-Architektur ist <strong class="text-fg-default">modell-agnostisch</strong>: OpenAI, Anthropic, Mistral oder lokale Open-Source-Modelle lassen sich genauso einbinden. Welches Modell passt, entscheiden IT-Compliance und Use-Case — nicht wir.
             </div>
           </details>
 
           <!-- FAQ 4 · HITL -->
-          <details class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+          <details class="group rounded-2xl border border-fg-strong/10 bg-fg-strong/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-fg-strong font-medium text-base select-none">
               Behält der Mensch die Kontrolle über die KI-Buchungen?
-              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              <svg class="w-5 h-5 text-fg-muted group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             </summary>
-            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
+            <div class="px-6 pb-5 text-sm text-fg-muted leading-relaxed">
               Absolut. Unsere Agenten arbeiten nach dem Human-in-the-Loop-Prinzip: Der Agent bereitet die Buchung vor, validiert alle Daten und markiert Abweichungen. Bei Unstimmigkeiten — etwa bei Preisabweichungen oder fehlenden Zuordnungen — wird der Vorgang zur manuellen Prüfung weitergeleitet. Sie behalten jederzeit die finale Kontrolle über das, was in Ihr PSI Penta gebucht wird.
             </div>
           </details>
 
           <!-- FAQ 4 · API security -->
-          <details class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+          <details class="group rounded-2xl border border-fg-strong/10 bg-fg-strong/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-fg-strong font-medium text-base select-none">
               Muss ich meine PSIpenta API für das Internet öffnen?
-              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              <svg class="w-5 h-5 text-fg-muted group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             </summary>
-            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
+            <div class="px-6 pb-5 text-sm text-fg-muted leading-relaxed">
               Nein. Unsere Agenten können über gesicherte VPN-Verbindungen oder einen Reverse Proxy auf Ihre PSIpenta-Instanz zugreifen — Ihre API wird niemals direkt dem Internet ausgesetzt. Alle Verbindungen sind verschlüsselt (TLS), und wir arbeiten eng mit Ihrer IT zusammen, um die Lösung in Ihre bestehende Sicherheitsarchitektur einzubetten.
             </div>
           </details>
 
           <!-- FAQ 5 · Timeline -->
-          <details class="group rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-white font-medium text-base select-none">
+          <details class="group rounded-2xl border border-fg-strong/10 bg-fg-strong/[0.02] overflow-hidden">
+            <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-fg-strong font-medium text-base select-none">
               Wie lange dauert die Implementierung?
-              <svg class="w-5 h-5 text-gray-400 group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              <svg class="w-5 h-5 text-fg-muted group-open:rotate-45 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             </summary>
-            <div class="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
+            <div class="px-6 pb-5 text-sm text-fg-muted leading-relaxed">
               Ein typisches Pilotprojekt dauert ca. 4 Wochen: In der ersten Woche analysieren wir Ihre Prozesse und Datenstrukturen, in Woche 2–3 konfigurieren und testen wir den Agenten mit Ihren realen Dokumenten, und in Woche 4 gehen wir in den betreuten Produktivbetrieb. Anpassungen und Feintuning laufen danach kontinuierlich weiter.
             </div>
           </details>
@@ -1520,17 +1608,17 @@
         </div>
 
         <div class="max-w-3xl mx-auto text-center py-12 md:py-20">
-          <h2 class="font-display text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05] mb-6">
+          <h2 class="font-display text-3xl md:text-5xl font-semibold text-fg-strong tracking-tight leading-[1.05] mb-6">
             PSIpenta<br>
-            <span class="text-gray-400">Potential-Analyse anfordern.</span>
+            <span class="text-fg-muted">Potential-Analyse anfordern.</span>
           </h2>
-          <p data-personalize="kontakt-lead" class="text-base md:text-lg text-gray-400 leading-relaxed mb-14 max-w-2xl mx-auto">
+          <p data-personalize="kontakt-lead" class="text-base md:text-lg text-fg-muted leading-relaxed mb-14 max-w-2xl mx-auto">
             Finden wir gemeinsam heraus, welche Prozesse in Ihrem Haus das größte Automatisierungs&shy;potential bieten.
           </p>
 
           <a href="mailto:hello@pentaflow.ai?subject=PSIpenta%20Potential-Analyse"
              class="email-cta group inline-flex items-center gap-3 pt-1.5">
-            <span class="font-display text-xl md:text-4xl font-semibold text-white group-hover:text-ice-400 transition-colors">
+            <span class="font-display text-xl md:text-4xl font-semibold text-fg-strong group-hover:text-ice-400 transition-colors">
               hello@pentaflow.ai
             </span>
             <svg class="w-5 h-5 text-ice-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -1538,7 +1626,7 @@
             </svg>
           </a>
 
-          <div class="mt-8 font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-gray-400 flex items-center justify-center gap-3">
+          <div class="mt-8 font-mono text-[11px] md:text-[10px] uppercase tracking-widest text-fg-muted flex items-center justify-center gap-3">
             <span class="flex items-center gap-1.5">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               Antwort in 24h
@@ -1549,8 +1637,8 @@
 
           <div class="mt-10 pt-6 border-t hairline max-w-sm mx-auto">
             <a href="https://calendly.com/jasper-castell/30min" target="_blank" rel="noopener noreferrer"
-               class="inline-flex items-center gap-2 py-3 text-sm text-gray-400 hover:text-ice-400 transition-colors group">
-              <svg class="w-4 h-4 text-gray-400 group-hover:text-ice-400 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+               class="inline-flex items-center gap-2 py-3 text-sm text-fg-muted hover:text-ice-400 transition-colors group">
+              <svg class="w-4 h-4 text-fg-muted group-hover:text-ice-400 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
               </svg>
               <span>Lieber direkt 30 Min im Kalender blocken</span>
@@ -1568,14 +1656,14 @@
   <footer class="border-t hairline py-12">
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="text-sm text-gray-400 text-center sm:text-left">
+        <div class="text-sm text-fg-muted text-center sm:text-left">
           <span class="block sm:inline">© 2026 PentaFlow AI</span>
           <span class="hidden sm:inline"> · </span>
           <span class="block sm:inline">Berlin &amp; Wien</span>
         </div>
         <div class="flex items-center gap-6">
-          <a href="impressum.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors py-3">Impressum</a>
-          <a href="datenschutz.html" class="text-sm text-gray-400 hover:text-gray-300 transition-colors py-3">Datenschutz</a>
+          <a href="impressum.html" class="text-sm text-fg-muted hover:text-fg-default transition-colors py-3">Impressum</a>
+          <a href="datenschutz.html" class="text-sm text-fg-muted hover:text-fg-default transition-colors py-3">Datenschutz</a>
         </div>
       </div>
     </div>
@@ -1605,6 +1693,30 @@
       if (mobileMenu.classList.contains('hidden')) return;
       if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target)) setMenuOpen(false);
     });
+
+    // Theme toggle
+    const themeToggleDesktop = document.getElementById('theme-toggle');
+    const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    const setTheme = (theme) => {
+      document.documentElement.setAttribute('data-theme', theme);
+      try { localStorage.setItem('theme', theme); } catch (e) { /* ignore */ }
+      if (themeMeta) themeMeta.setAttribute('content', theme === 'light' ? '#f4f0e8' : '#09090b');
+      const pressed = theme === 'light' ? 'true' : 'false';
+      if (themeToggleDesktop) themeToggleDesktop.setAttribute('aria-pressed', pressed);
+      if (themeToggleMobile) themeToggleMobile.setAttribute('aria-pressed', pressed);
+    };
+    const toggleTheme = () => {
+      const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    };
+    if (themeToggleDesktop) themeToggleDesktop.addEventListener('click', toggleTheme);
+    if (themeToggleMobile) themeToggleMobile.addEventListener('click', toggleTheme);
+    // Sync aria-pressed on load (init script may have set data-theme)
+    if (document.documentElement.getAttribute('data-theme') === 'light') {
+      if (themeToggleDesktop) themeToggleDesktop.setAttribute('aria-pressed', 'true');
+      if (themeToggleMobile) themeToggleMobile.setAttribute('aria-pressed', 'true');
+    }
 
     // Scroll reveal (lightweight)
     const reveals = document.querySelectorAll('.reveal');
